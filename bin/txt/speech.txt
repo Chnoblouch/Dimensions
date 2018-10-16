@@ -1,0 +1,11 @@
+anyrava0=Guten Morgen, du Vollkornholztür!
+anyrava1=Eldenir hat heute einfach grundlos einen/nlanderen Drachen angegriffen! Bis sich/nldie beiden wieder beruhigt haben...!
+anyrava2=Hast du deinem Drachen/nlschon einen Namen gegeben? 
+anyrava3=Wenn Käse Löcher hat, hat man mehr Löcher,/nldesto mehr Käse man hat, nicht wahr?/npDa man aber mit mehr Löchern/nlweniger Käse hat, würde das bedeuten,/nldass man je mehr Käse man hat,/nldesto weniger Käse man hat!
+anyrava4=Wenn man in ein Loch ein Netz macht,/nldann hat es eines weniger.
+
+anyrava_greetings=Na, du Vollkornholztür?/npDein Gesicht habe ich hier/nlnoch nie gesehen./npWillst du lernen wie man Drachen zähmt?/npJa?/nlGut, ich lande bei dir.
+
+jessica0=Na, du Schwächling?/nlWie viele Monster haste heute schon/nlverpuffen lassen? Keines?/nlIch sag's ja! Du bist ein Schwächling!
+jessica1=Boah, mein Schwert ist heute/nlso rostig! Hast du zufällig/nlSchwertentroster Plus Plus Ultra 5000.1/nldabei?
+jessica2=Ahh, diese Monster./nlNie spawnen genug von ihnen!

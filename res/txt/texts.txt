@@ -1,0 +1,111 @@
+item_wood=Holz
+item_stone=Stein
+item_slime=Glibber
+item_apple=Apfel
+item_wood_axe=Holzaxt
+item_wood_pickaxe=Holzspitzhacke
+item_wood_shovel=Holzschaufel
+item_wood_sword=Holzschwert
+item_stone_axe=Steinaxt
+item_stone_pickaxe=Steinspitzhacke
+item_stone_shovel=Steinschaufel
+item_stone_sword=Steinschwert
+item_meat=Fleisch
+item_workbench=Werkbank
+item_oven=Ofen
+item_anvil=Amboss
+item_iron_ore=Eisenerz
+item_iron_ingot=Eisenbarren
+item_iron_axe=Eisenaxt
+item_iron_pickaxe=Eisenspitzhacke
+item_iron_shovel=Eisenschaufel
+item_iron_sword=Eisenschwert
+item_feather=Feder
+item_eye_piece=Augenstück
+item_iron_helmet=Eisenhelm
+item_iron_chestplate=Eisenbrustplatte
+item_iron_leggings=Eisenbeinschutz
+item_iron_boots=Eisenstiefel
+item_iron_shield=Eisenschild
+item_bow=Bogen
+item_arrow=Pfeil
+item_taykolos=Taykolos
+item_frost_pearl=Frostperle
+item_alchemy_table=Alchemietisch
+item_health_potion=Trank der Heilung
+item_night_herb=Nachtkraut
+item_speed_potion=Trank der Geschwindigkeit
+item_mushroom=Pilz
+item_red_stone=Rot leuchtender Stein
+item_blue_stone=Blau leuchtender Stein
+item_shimmering_slime=Schimmernder Glibber
+
+
+
+
+
+
+item_descr_slime="Wie Gelee, aber heilend"
+item_descr_taykolos="Leuchtet unruhig"
+item_descr_frost_pearl="Reine Verdichtung von Kälte"
+item_descr_night_herb="Mit dem Elixier der Nacht gefüllt"
+item_descr_health_potion="Gesund"
+item_descr_speed_potion="Abgehen wie eine Rakete"
+item_descr_red_stone="Sieht gefährlich aus"
+item_descr_blue_stone="Fühlt sich wie Eis an"
+item_descr_shimmering_slime="Leuchtet mysteriös..."
+
+
+
+
+
+monster_slime=Schleim
+monster_lobire=Lagogel
+monster_walking_eye=Laufendes Auge
+monster_rogo=Rogo
+monster_giant_slime=Riesenschleim
+
+creature_dragon=Drache
+
+npc_bruno=Holzfäller Bruno
+npc_anyrava=Drachenprinzessin Anyrava
+npc_jessica=Schwertmeisterin Jessica
+
+
+
+
+
+effect_speed=Geschwindigkeit
+effect_regeneration=Regeneration
+
+
+
+
+
+speech_anyrava0=Guten Morgen, du Vollkornholztür!
+speech_anyrava1=Eldenir hat heute einfach grundlos einen/nlanderen Drachen angegriffen! Bis sich/nldie beiden wieder beruhigt haben...!
+speech_anyrava2=Hast du deinem Drachen/nlschon einen Namen gegeben? 
+speech_anyrava_unused0=Wenn Käse Löcher hat, hat man mehr Löcher,/nldesto mehr Käse man hat, nicht wahr?/npDa man aber mit mehr Löchern/nlweniger Käse hat, würde das bedeuten,/nldass man weniger Käse hat,/nldesto mehr Käse man hat!
+speech_anyrava_unused1=Wenn man in ein Netz ein Loch macht,/nldann hat es eines weniger.
+
+speech_anyrava_greetings=Na, du Vollkornholztür?/npDein Gesicht habe ich hier/nlnoch nie gesehen./npWillst du lernen wie man Drachen zähmt?/npJa?/nlGut, ich lande bei dir.
+speech_anyrava_explanation=Also, Drachen zähmen ist ganz einfach./nlAls Erstes musst du ein Stück Fleisch in die/nlHaupthand nehmen./npDann wartest du, bis ein Drache kommt und/nlbei dir landet. Dann musst du ihn mit/nl deiner LEEREN anderen Hand besteigen/npAber pass auf!/nl Wenn du ihm das Fleisch zu lange nicht gibst,/nlfliegt er wieder davon.
+
+speech_anyrava_warning=HEY!! Was tust du da?!/npLass Eldenir in Ruhe, wenn du/nlkeinen Ärger willst!
+speech_anyrava_angry=DAS REICHT!!
+
+
+speech_jessica0=Na, du Schwächling?/nlWie viele Monster haste heute schon/nlverpuffen lassen? Keines?/nlIch sag's ja! Du bist ein Schwächling!
+speech_jessica1=Boah, mein Schwert ist heute/nlso rostig! Hast du zufällig/nlSchwertentroster Plus Plus Ultra 5000.1/nldabei?
+speech_jessica2=Ahh, diese Monster./nlNie erscheinen genug von ihnen!
+speech_jessica_explanation=In diesem Spiel gibt es/nlbis jetzt nur fünf Waffen!/nlWas für ein fauler Entwickler!/npDas Holzschwert, das Steinschwert,/nl das Eisenschwert, den Bogen und den Taykolos
+
+
+speech_bruno0=Lass mir ein paar Bäume übrig,/nlbevor du alle abgeholzt hast!
+speech_bruno1=Dir würde ein Vollbart sicher gut stehen!
+speech_bruno2=Komisch, dass Schaufeln bis jetzt/nlimmer noch komplett nutzlos sind.
+speech_bruno_explanation=Als Erstes würde ich ein paar/nlBäume fällen, mit dem Holz/nleine Spitzhacke machen/npund dann Steine und Eisen sammeln, damit/nleine bessere Ausrüstung machen/nlund in den anderen Dimensionen dann/npmehr Dinge suchen für noch/nlbessere Ausrüstung!
+
+
+
+crafting_ingredients=Zutaten

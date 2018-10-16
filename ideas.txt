@@ -1,0 +1,43 @@
+
+Mechanic
+- Dimension Portals
+
+___________________________________
+
+Items
+
+- Magic Wands
+
+- Wolf Wand
+  Summon a rideable wolf
+  
+- Decision Wand
+  Summon either three small fire ghosts or one large
+  fire ghost
+
+- Star hoe
+  Creates a blue-pink field where giant plants grow
+  
+ - Taykolos
+___________________________________
+
+Inhabitants
+
+- Poor family with a very valuable object, but they don't
+  want to sell it because it's inheritance
+  
+- Hebuffs
+  Speaks with words like: Hebenieff, Hubabb, Hebad
+  
+ __________________________________
+
+ Dimensions
+ 
+ - HD Dimension (HD = Hyper Dimension)
+   World and inhabitants are in high resolution
+   The king catches the player and throws him into a prison, because
+   he thinks, that the player 
+   
+- Sky Dimension
+  Tameable dragons
+  Flying islands
