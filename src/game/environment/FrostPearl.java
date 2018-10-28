@@ -5,7 +5,7 @@ import java.util.Random;
 import game.creature.Player;
 import game.gfx.Screen;
 import game.gfx.SpriteSheet;
-import game.item.ItemFrostPearl;
+import game.item.resources.ItemFrostPearl;
 import game.obj.Drop;
 import game.obj.GameObject;
 import game.utils.Block;
@@ -51,9 +51,9 @@ extends GameObject {
 	}
 	
 	@Override
-	public void interactWith(Player player)
+	public void interactWith(Player player, boolean mouseOn)
 	{		
-		if(empty) return;
+		if(empty || !mouseOn) return;
 		
 		empty = true;
 		

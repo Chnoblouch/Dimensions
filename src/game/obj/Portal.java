@@ -59,12 +59,12 @@ extends GameObject {
 		if(isInRange(level.player) && collides(level.player) && !changeLevel && !level.player.rideOnDragon)
 		{
 			changeLevel = true;
-			level.game.particleChangeLevel();
+			level.game.changeLevelScreen();
 			
 			Sounds.portal.play(0, getX() + 128, getY() + 128, level.game.getCamX(), level.game.getCamY());
 		}
 		
-		if(changeLevel && level.game.particleChangeLevel.finish)
+		if(changeLevel && level.game.changeLevelScreen.finish)
 		{
 			changeLevel = false;
 			level.game.changeLevel(destination);

@@ -7,23 +7,28 @@ import game.gfx.Font;
 import game.gfx.Screen;
 import game.gfx.SpriteSheet;
 import game.item.Item;
-import game.item.ItemApple;
-import game.item.ItemArrow;
-import game.item.ItemBow;
-import game.item.ItemIronAxe;
-import game.item.ItemIronBoots;
-import game.item.ItemIronChestplate;
-import game.item.ItemIronHelmet;
-import game.item.ItemIronLeggings;
-import game.item.ItemIronOre;
-import game.item.ItemIronPickaxe;
-import game.item.ItemIronShield;
-import game.item.ItemIronSword;
-import game.item.ItemMeat;
-import game.item.ItemShimmeringSlime;
-import game.item.ItemStone;
-import game.item.ItemTaykolos;
-import game.item.ItemWood;
+import game.item.arrows.ItemArrow;
+import game.item.axes.ItemIronAxe;
+import game.item.boots.ItemIronBoots;
+import game.item.bows.ItemBow;
+import game.item.chestplates.ItemWizardRobe;
+import game.item.craftingstations.ItemAlchemyTable;
+import game.item.craftingstations.ItemAnvil;
+import game.item.craftingstations.ItemOven;
+import game.item.craftingstations.ItemWorkbench;
+import game.item.food.ItemApple;
+import game.item.food.ItemMeat;
+import game.item.helmets.ItemWizardHat;
+import game.item.leggings.ItemIronLeggings;
+import game.item.magicweapons.ItemCrystalStaff;
+import game.item.magicweapons.ItemTaykolos;
+import game.item.ores.ItemGoldOre;
+import game.item.pickaxes.ItemIronPickaxe;
+import game.item.resources.ItemStone;
+import game.item.resources.ItemWood;
+import game.item.shields.ItemIronShield;
+import game.item.special.ItemShimmeringSlime;
+import game.item.swords.ItemIronSword;
 import game.saving.SaveFile;
 import game.utils.DoublePoint;
 import game.utils.SafeArrayList;
@@ -113,28 +118,40 @@ public class Inventory {
 		slots.add(armorLeggings);
 		slots.add(armorBoots);
 		
-		armorChestplate.setItem(new ItemIronChestplate(), 1);
-		armorBoots.setItem(new ItemIronBoots(), 1);
-		armorHelmet.setItem(new ItemIronHelmet(), 1);
-		armorLeggings.setItem(new ItemIronLeggings(), 1);
+//		armorHelmet.setItem(new ItemIronHelmet(), 1);
+//		armorChestplate.setItem(new ItemIronChestplate(), 1);
+//		armorBoots.setItem(new ItemIronBoots(), 1);
+//		armorLeggings.setItem(new ItemIronLeggings(), 1);
+		
+//		armorChestplate.setItem(new ItemWizardRobe(), 1);
+//		armorHelmet.setItem(new ItemWizardHat(), 1);
 		
 		fillNextFreeSlot(new ItemWood(), 500);
 		fillNextFreeSlot(new ItemStone(), 500);
-		fillNextFreeSlot(new ItemIronOre(), 100);
+		fillNextFreeSlot(new ItemGoldOre(), 100);
 		fillNextFreeSlot(new ItemMeat(), 50);
 		fillNextFreeSlot(new ItemApple(), 50);
 		
 		fillNextFreeSlot(new ItemIronSword(), 1);
+		fillNextFreeSlot(new ItemIronShield(), 1);
 		fillNextFreeSlot(new ItemIronPickaxe(), 1);
 		fillNextFreeSlot(new ItemIronAxe(), 1);
 		
 		fillNextFreeSlot(new ItemBow(), 1);
 		fillNextFreeSlot(new ItemArrow(), 100);
 		
+		fillNextFreeSlot(new ItemWorkbench(), 1);
+		fillNextFreeSlot(new ItemOven(), 1);
+		fillNextFreeSlot(new ItemAnvil(), 1);
+		fillNextFreeSlot(new ItemAlchemyTable(), 1);
+		
 		fillNextFreeSlot(new ItemShimmeringSlime(), 1);
 		
-		mainHandItem.setItem(new ItemTaykolos(), 1);
-		offHandItem.setItem(new ItemIronShield(), 1);
+		fillNextFreeSlot(new ItemTaykolos(), 1);
+		
+		mainHandItem.setItem(new ItemCrystalStaff(), 1);
+//		mainHandItem.setItem(new ItemIronHoe(), 1);
+		offHandItem.setItem(new ItemShimmeringSlime(), 1);
 	}
 	
 	public void changeVisibility(int menu)
@@ -142,6 +159,18 @@ public class Inventory {
 		visible = !visible;
 		currentMenuID = menu;
 		currentMenu = menus[currentMenuID];
+		
+		if(!visible && isItemOnMouse())
+		{
+			game.player.drop(itemOnMouse, itemOnMouseCount);
+			itemOnMouse = null;
+			itemOnMouseCount = 0;
+		}
+	}
+	
+	public void setVisible(boolean visible)
+	{
+		this.visible = visible;
 		
 		if(!visible && isItemOnMouse())
 		{
@@ -262,6 +291,8 @@ public class Inventory {
 				Slot s = slots.get(i);
 				if(!s.isEmpty() && itemOnMouse == null && s.isMouseOn()) s.renderInfo(screen);
 			}
+			
+			currentMenu.renderInfo(screen);
 		}
 		
 		mainHandItem.render(screen);

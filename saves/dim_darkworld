@@ -9491,6 +9491,7 @@ game.environment.DarkSpike;7169.0;7087.0;null
 game.environment.DarkSpike;7685.0;7110.0;null
 game.environment.DarkSpike;6793.0;7229.0;null
 game.environment.DarkSpike;8009.0;7295.0;null
+game.obj.Portal;6144.0;7296.0;0
 game.environment.RedStone;5306.0;7461.0;null
 game.environment.DarkSpike;7185.0;7363.0;null
 game.environment.DarkSpike;6354.0;7520.0;null
@@ -9501,4 +9502,3 @@ game.environment.DarkSpike;6850.0;8125.0;null
 game.environment.DarkSpike;7237.0;8234.0;null
 game.environment.DarkSpike;7332.0;8632.0;null
 game.environment.DarkSpike;7042.0;9327.0;null
-game.obj.Portal;6144.0;7296.0;0

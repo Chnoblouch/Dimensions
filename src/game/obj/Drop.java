@@ -41,10 +41,10 @@ extends GameObject {
 //		if(flyUpSpeed <= -0.75) flyUp = true;
 //		
 //		flyY += flyUpSpeed;
-		
+				
 		if(!pickedUp)
 		{
-			if(level.player.inventory.canHold(item.getItemID(), count) && isInRange(level.player) && collides(level.player)) 
+			if(!level.player.isDeath() && level.player.inventory.canHold(item.getItemID(), count) && isInRange(level.player) && collides(level.player)) 
 			{
 				level.player.inventory.fillNextFreeSlot(item, count);
 				pickedUp = true;

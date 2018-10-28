@@ -8,7 +8,7 @@ import game.gfx.Screen;
 import game.gfx.Sounds;
 import game.gfx.SpriteFilter;
 import game.gfx.SpriteSheet;
-import game.item.ItemMushroom;
+import game.item.resources.ItemMushroom;
 import game.obj.Drop;
 import game.obj.GameObject;
 import game.particle.ParticleDestroying;
@@ -38,7 +38,7 @@ extends GameObject {
 	{
 		if(screen.isInside(getX(), getY(), Block.SIZE * 2, Block.SIZE)) 
 		{			
-			BufferedImage sprite = SpriteSheet.overworld.getSprite(32, 72, 24, 24);
+			BufferedImage sprite = SpriteSheet.overworld.getSprite(64, 72, 24, 24);
 			
 			screen.render(SpriteFilter.getShadowStanding(sprite), getX(), getY(), Block.SIZE * 2, Block.SIZE, 0, 0.25);
 			screen.render(sprite, getX(), getY(), Block.SIZE, Block.SIZE, 0, 1);
@@ -58,8 +58,10 @@ extends GameObject {
 	}
 	
 	@Override
-	public void interactWith(Player player)
+	public void interactWith(Player player, boolean mouseOn)
 	{
+		if(!mouseOn) return;
+		
 		health -= player.getAttackDamage();
 		
 		if(health <= 0)

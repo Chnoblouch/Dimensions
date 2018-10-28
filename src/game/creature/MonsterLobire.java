@@ -9,11 +9,12 @@ import game.gfx.Screen;
 import game.gfx.Sounds;
 import game.gfx.SpriteFilter;
 import game.gfx.SpriteSheet;
-import game.item.ItemFeather;
-import game.item.ItemMeat;
+import game.item.food.ItemMeat;
+import game.item.monsterdrops.ItemFeather;
 import game.obj.Drop;
 import game.obj.GameObject;
 import game.particle.ParticleFeather;
+import game.utils.Angles;
 import game.utils.Block;
 import game.utils.Hitbox;
 import game.utils.HitboxFactory;
@@ -35,7 +36,8 @@ extends Monster {
 	
 	public MonsterLobire()
 	{
-		setHealth(10);
+		setMaxHealth(60);
+		setHealth(60);
 		setInvulnerableTime(500);
 		
 		walkTimer = new TimeCounter(75, () -> 
@@ -96,7 +98,7 @@ extends Monster {
 	}
 	
 	@Override
-	public void interactWith(Player player)
+	public void interactWith(Player player, boolean mouseOn)
 	{
 		damage(player.getAttackDamage(), player);
 		knockback(player.getAngle(this), 32);
@@ -158,17 +160,13 @@ extends Monster {
 			
 			if(!target.rideOnDragon && target.isInRange(this) && collides(target)) 
 			{
-				target.damage(3, this);
+				target.damage(24, this);
 				target.knockback(getAngle(target), 32);
 			}
 			
 			angle = getAngle(target);
+			lookDir = Angles.getLookDir(angle);
 			moveAlongAngle(angle, speed * tpf);
-			
-			if((angle > 315 && angle <= 360) || (angle > 0 && angle <= 45)) lookDir = 2;
-			else if(angle > 45 && angle <= 135) lookDir = 1;
-			else if(angle > 135 && angle <= 225) lookDir = 0;
-			else if(angle > 225 && angle <= 315) lookDir = 3;
 		}
 	}
 	

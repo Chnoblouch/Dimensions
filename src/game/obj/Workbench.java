@@ -20,8 +20,9 @@ extends GameObject {
 	}
 	
 	@Override
-	public void interactWith(Player player)
+	public void interactWith(Player player, boolean mouseOn)
 	{
+		if(!mouseOn) return;
 		player.inventory.changeVisibility(InventoryMenu.MENU_WORKBENCH_CRAFTING);
 	}
 	

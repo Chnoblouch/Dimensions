@@ -78,8 +78,8 @@ extends Creature {
 	
 	public Dragon()
 	{
-		setMaxHealth(100);
-		setHealth(100);
+		setMaxHealth(500);
+		setHealth(500);
 		setInvulnerableTime(500);
 		
 		home = new DoublePoint(Level.CENTER, Level.CENTER);
@@ -206,6 +206,8 @@ extends Creature {
 	{
 		if((tamed && owner == level.player) || mounted) return;
 				
+		if(!flying) startFlying();
+		
 		angry = true;
 		followPlayer = false;
 	}
@@ -366,8 +368,10 @@ extends Creature {
 	}
 	
 	@Override
-	public void interactWith(Player player)
+	public void interactWith(Player player, boolean mouseOn)
 	{
+		if(!mouseOn) return;
+		
 //		damage(player.getAttackDamage());
 		if(flying)
 		{

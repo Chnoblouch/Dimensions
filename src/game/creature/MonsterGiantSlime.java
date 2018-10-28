@@ -13,7 +13,7 @@ import game.gfx.Font;
 import game.gfx.Screen;
 import game.gfx.SpriteFilter;
 import game.gfx.SpriteSheet;
-import game.item.ItemSlime;
+import game.item.monsterdrops.ItemSlime;
 import game.obj.Drop;
 import game.obj.GameObject;
 import game.particle.BossParticle;
@@ -34,17 +34,24 @@ extends Monster {
 	private double jumpY, jumpMotion = 0;
 	private double speed = 24;
 	
+	private boolean shootInCircle;
+	private double circleAngle;
+	private TimeCounter shootInCircleTimer;
+	
 	private Player target;
 	
 	private double angle = 0;
 	
 	private TimeCounter shootTimer;
+	private TimeCounter smallSlimeTimer;
+	private TimeCounter startShootingInCircleTimer;
 	
 	private TimeCounter particleTimer;
 	
 	public MonsterGiantSlime()
 	{
-		setHealth(100);
+		setMaxHealth(500);
+		setHealth(500);
 		setInvulnerableTime(1500);
 		
 		standTimer = new TimeCounter(1000, () -> 
@@ -59,6 +66,38 @@ extends Monster {
 		{
 			shootSlimeball();
 			shootTimer.reset();
+		});
+		
+		smallSlimeTimer = new TimeCounter(5000, () -> 
+		{
+			MonsterSlime slime = new MonsterSlime();
+			slime.setPosition(getHitbox().center().x + new Random().nextInt(256 + 1), getHitbox().center().y + new Random().nextInt(256 + 1));
+			slime.fromGiantSlime();
+			slime.giantJump(angle);
+			level.addObject(slime);
+			
+			smallSlimeTimer.reset();
+		});
+		
+		startShootingInCircleTimer = new TimeCounter(7500, () ->
+		{
+			shootInCircle = true;
+			startShootingInCircleTimer.reset();
+		});
+		
+		shootInCircleTimer = new TimeCounter(75, () ->
+		{
+			shootSlimeball(circleAngle);
+			circleAngle += 20;
+			
+			if(circleAngle > 360)
+			{
+				shootInCircle = false;
+				circleAngle = 0;
+				startShootingInCircleTimer.reset();
+			}
+			
+			shootInCircleTimer.reset();
 		});
 		
 		particleTimer = new TimeCounter(500, () -> 
@@ -126,7 +165,7 @@ extends Monster {
 	}
 	
 	@Override
-	public void interactWith(Player player)
+	public void interactWith(Player player, boolean mouseOn)
 	{
 		damage(player.getAttackDamage(), player);
 		knockback(player.getAngle(this), 24);
@@ -150,12 +189,20 @@ extends Monster {
 		level.removeObject(this);
 		level.monsterCounter --;
 		
-		for(int i = 0; i < 16; i++)
+		for(int i = 0; i < 500; i++)
 		{
 			ParticleDestroying particle = new ParticleDestroying();
 			particle.setSprite(0, 0);
-			particle.setPosition(getHitbox().center().x, getHitbox().center().y);
+			particle.setPosition(getHitbox().center().x + new Random().nextInt(256 + 1), getHitbox().center().y + new Random().nextInt(256 + 1));
 			level.addObject(particle);
+		}
+		
+		for(int i = 0; i < 10; i++)
+		{
+			MonsterSlime slime = new MonsterSlime();
+			slime.setPosition(getHitbox().center().x + new Random().nextInt(256 + 1), getHitbox().center().y + new Random().nextInt(256 + 1));
+			slime.giantJump(new Random().nextInt(360));
+			level.addObject(slime);
 		}
 		
 		for(int i = 0; i < 1 + new Random().nextInt(3); i++)
@@ -174,6 +221,14 @@ extends Monster {
 		level.addObject(slimeball);
 	}
 	
+	public void shootSlimeball(double angle)
+	{
+		Slimeball slimeball = new Slimeball();
+		slimeball.setPosition(getX() + 128 + 64, getY() + 256 + 64);
+		slimeball.setAngle(angle);
+		level.addObject(slimeball);
+	}
+	
 	@Override
 	public void update(double tpf)
 	{
@@ -181,14 +236,19 @@ extends Monster {
 		
 		target = level.player;
 		
-		shootTimer.count(tpf);
-		particleTimer.count(tpf);
+		if(!shootInCircle)
+		{
+			shootTimer.count(tpf);
+			startShootingInCircleTimer.count(tpf);
+			smallSlimeTimer.count(tpf);
+			particleTimer.count(tpf);
+		} else shootInCircleTimer.count(tpf);
 	
 		if(target != null)
 		{
 			if(!target.rideOnDragon && target.isInRange(this) && collides(target)) 
 			{
-				target.damage(3, this);
+				target.damage(26, this);
 				target.knockback(getAngle(target), 24);
 			}
 			
@@ -220,7 +280,10 @@ extends Monster {
 					jump = false;
 				}
 				
-			} else standTimer.count(tpf);
+			} else 
+			{
+				if(!shootInCircle) standTimer.count(tpf);
+			}
 		}
 	}
 	

@@ -11,11 +11,14 @@ import java.awt.event.KeyEvent;
 import java.awt.image.BufferedImage;
 import java.util.Random;
 
+import javax.sound.sampled.Clip;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
 
 import game.creature.Player;
+import game.gfx.Font;
 import game.gfx.Screen;
+import game.gfx.Sounds;
 import game.gfx.SpriteSheet;
 import game.gui.Inventory;
 import game.gui.TextBox;
@@ -24,7 +27,8 @@ import game.levels.LevelDarkWorld;
 import game.levels.LevelFrostWorld;
 import game.levels.LevelOverworld;
 import game.levels.LevelSkyWorld;
-import game.particle.ParticleChangeLevel;
+import game.particle.ChangeLevelScreen;
+import game.particle.YouDiedScreen;
 import game.saving.SaveManager;
 import game.utils.DoublePoint;
 import game.utils.MapLoader;
@@ -55,9 +59,12 @@ implements Runnable {
 	
 	private int fps = 0;
 	
-	public ParticleChangeLevel particleChangeLevel;
+	public ChangeLevelScreen changeLevelScreen;
+	public YouDiedScreen youDiedScreen;
 	
 	public TextBox textBox;
+	
+	public boolean saved = false;
 			
 	public Game()
 	{				
@@ -89,7 +96,7 @@ implements Runnable {
 	private void init()
 	{
 		screen = new Screen(this);
-		
+				
 		createMaps();
 		
 		levels[0] = new LevelOverworld(this);
@@ -104,7 +111,8 @@ implements Runnable {
 		player.setPosition(level.getPlayerSpawn().x, level.getPlayerSpawn().y);
 		level.addObject(player);
 		
-		particleChangeLevel = new ParticleChangeLevel();
+		changeLevelScreen = new ChangeLevelScreen();
+		youDiedScreen = new YouDiedScreen(this);
 		
 		if(exists()) SaveManager.loadGameState(this);
 	}
@@ -132,7 +140,7 @@ implements Runnable {
 			SaveManager.loadMaps(this);
 		}
 	}
-	
+	 
 	public void changeLevel(int level)
 	{
 		this.level.removeObject(player);
@@ -143,6 +151,12 @@ implements Runnable {
 		
 		this.level.addObject(player);
 		player.setPosition(this.level.getPlayerSpawn().x, this.level.getPlayerSpawn().y);
+		
+		if(level == 1)
+		{
+			Sounds.wind.setLoop(Clip.LOOP_CONTINUOUSLY);
+			Sounds.wind.play(0, 0);
+		} else Sounds.wind.stop();
 	}
 	
 	public Level[] getLevels()
@@ -165,27 +179,24 @@ implements Runnable {
 		return maps;
 	}
 	
-	public void particleChangeLevel()
+	public void changeLevelScreen()
 	{
-		particleChangeLevel.run();
+		changeLevelScreen.run();
+	}
+	
+	public void youDiedScreen()
+	{
+		youDiedScreen.run();
+	}
+	
+	public void hideYouDiedScreen()
+	{
+		youDiedScreen.hide();
 	}
 	
 	public void keyPressed(int key)
 	{
 		if(player != null) player.keyPressed(key);		
-		
-//		if(inventory != null)
-//		{
-//			if(key == KeyEvent.VK_1) inventory.hotbar.setSelectedSlot(0);
-//			if(key == KeyEvent.VK_2) inventory.hotbar.setSelectedSlot(1);
-//			if(key == KeyEvent.VK_3) inventory.hotbar.setSelectedSlot(2);
-//			if(key == KeyEvent.VK_4) inventory.hotbar.setSelectedSlot(3);
-//			if(key == KeyEvent.VK_5) inventory.hotbar.setSelectedSlot(4);
-//			if(key == KeyEvent.VK_6) inventory.hotbar.setSelectedSlot(5);
-//			if(key == KeyEvent.VK_7) inventory.hotbar.setSelectedSlot(6);
-//			if(key == KeyEvent.VK_8) inventory.hotbar.setSelectedSlot(7);
-//			if(key == KeyEvent.VK_9) inventory.hotbar.setSelectedSlot(8);
-//		}
 		
 		if(key == KeyEvent.VK_ESCAPE) System.exit(JFrame.EXIT_ON_CLOSE);
 	}
@@ -239,8 +250,40 @@ implements Runnable {
 //		if(rot < 0) inventory.hotbar.selectLast();
 	}
 	
-	private double healthBarHealth = 20;
+	private double healthBarProcess = 20;
+	
+	private void renderHealthBar()
+	{
+		int sy = player.invulnerableInvisible ? 9 : 0;
 		
+		for(int i = 0; i < 10; i ++)
+		{
+			int y = player.invulnerableInvisible ? 16 - 4 + new Random().nextInt(9) : 16;
+			
+			if(healthBarProcess >= (i + 1) * 10)
+				screen.renderGUI(SpriteSheet.bars.getSprite(0, sy, 9, 9), i * 40 + 16, y, 36, 36, 0, 1);
+			else if(healthBarProcess < (i + 1) * 10 && healthBarProcess >= ((i + 1) * 10) - 5)
+				screen.renderGUI(SpriteSheet.bars.getSprite(9, sy, 9, 9), i * 40 + 16, y, 36, 36, 0, 1);
+			else if(healthBarProcess < ((i + 1) * 10) - 5)
+				screen.renderGUI(SpriteSheet.bars.getSprite(18, sy, 9, 9), i * 40 + 16, y, 36, 36, 0, 1);
+		}
+	}
+	
+	private double manaBarProcess = 20;
+	
+	private void renderManaBar()
+	{		
+		for(int i = 0; i < 10; i ++)
+		{			
+			if(manaBarProcess >= (i + 1) * 10)
+				screen.renderGUI(SpriteSheet.bars.getSprite(27, 0, 9, 9), i * 40 + 16, 64, 36, 36, 0, 1);
+			else if(manaBarProcess < (i + 1) * 10 && manaBarProcess >= ((i + 1) * 10) - 5)
+				screen.renderGUI(SpriteSheet.bars.getSprite(36, 0, 9, 9), i * 40 + 16, 64, 36, 36, 0, 1);
+			else if(manaBarProcess < ((i + 1) * 10) - 5)
+				screen.renderGUI(SpriteSheet.bars.getSprite(45, 0, 9, 9), i * 40 + 16, 64, 36, 36, 0, 1);
+		}
+	}
+			
 	@Override
 	protected void paintComponent(Graphics g)
 	{
@@ -249,42 +292,40 @@ implements Runnable {
 		synchronized (LOCK) 
 		{
 			if(screen != null) screen.beforeRendering((Graphics2D) g, WIDTH / 2 - (Screen.WIDTH / 2));
+			
+			if(level != null) level.render(screen);
 		}
 		
-		if(level != null) level.render(screen);
-		
+//		for(int i = 0; i < 100; i++)
+//		{
+//			screen.renderGUI(SpriteSheet.player.getSprite(0, 0, 64, 64), 
+//							 new Random().nextInt(1920) - 128, new Random().nextInt(1080) - 128, 256, 256, 0, 1);
+//		}
+				
 //		g.drawImage(screen.renderedScreen, WIDTH / 2 - (Screen.WIDTH / 2), 0, Screen.WIDTH, Screen.HEIGHT, null);
 		
 //		screen.renderHitbox(HitboxFactory.create(Level.CENTER - 16, Level.CENTER - 16, 32, 32));
 		
 		if(player != null)
 		{
-			int sy = player.invulnerableInvisible ? 9 : 0;
-			
-			for(int i = 0; i < 10; i ++)
-			{
-				int y = player.invulnerableInvisible ? 16 - 4 + new Random().nextInt(9) : 16;
-				
-				if(healthBarHealth >= (i + 1) * 2)
-					screen.renderGUI(SpriteSheet.bars.getSprite(0, sy, 9, 9), i * 40 + 16, y, 36, 36, 0, 1);
-				else if(healthBarHealth < (i + 1) * 2 && healthBarHealth >= ((i + 1) * 2) - 1)
-					screen.renderGUI(SpriteSheet.bars.getSprite(9, sy, 9, 9), i * 40 + 16, y, 36, 36, 0, 1);
-				else if(healthBarHealth < ((i + 1) * 2) - 1)
-					screen.renderGUI(SpriteSheet.bars.getSprite(18, sy, 9, 9), i * 40 + 16, y, 36, 36, 0, 1);
-			}
-			
+			renderHealthBar();
+			renderManaBar();
 			inventory.render(screen);
 		}
 		
 		textBox.render(screen);
 		
-//		screen.renderFont("FPS: "+fps, 16, Screen.HEIGHT - 32, 32, "white", false);
+		screen.renderFont("FPS: "+fps, 16, Screen.HEIGHT - 32, 32, "white", false);
+		if(saved) screen.renderFont("Game saved", 256, Screen.HEIGHT - 32, 32, Font.COLOR_WHITE, false);
 		
+		if(!level.player.isDeath())
+		{
+			DoublePoint mousePos = getMouse();
+			screen.renderGUI(SpriteSheet.cursor.toImage(), mousePos.x, mousePos.y, 48, 48, 0, 1);
+		}
 		
-		DoublePoint mousePos = getMouse();
-		screen.renderGUI(SpriteSheet.cursor.toImage(), mousePos.x, mousePos.y, 48, 48, 0, 1);
-		
-		particleChangeLevel.render(screen);
+		changeLevelScreen.render(screen);
+		youDiedScreen.render(screen);
 		
 //		screen.renderFont("ABCDEFGHIJKLMNOPQRSTUVWXYZ", 0, 100, 40, Font.COLOR_YELLOW, false);
 //		screen.renderFont("abcdefghijklmnopqrstuvwxyz", 0, 180, 40, Font.COLOR_YELLOW, false);
@@ -297,7 +338,7 @@ implements Runnable {
 		g.fillRect(0, 0, WIDTH / 2 - (Screen.WIDTH / 2), HEIGHT);
 		g.fillRect(WIDTH - (WIDTH / 2 - (Screen.WIDTH / 2)), 0, WIDTH / 2 - (Screen.WIDTH / 2), HEIGHT);
 	}
-	
+
 	@Override
 	public void run() 
 	{
@@ -309,28 +350,36 @@ implements Runnable {
 		while(running)
 		{
 			long now = System.currentTimeMillis();
-			double tpf = (1d / 25) * (now-last);
-						
+			double tpf = (1d / 25) * (now - last);
+
+			last = now;
+									
 			if(level != null) 
 			{
 				synchronized (LOCK)
 				{
-					level.update(tpf);
-					if(particleChangeLevel != null) particleChangeLevel.update(tpf);
+					if(player != null && !player.isDeath()) level.update(tpf);
+					else if(player != null && player.isDeath()) player.update(tpf);
+					
+					if(changeLevelScreen != null) changeLevelScreen.update(tpf);
+					if(youDiedScreen != null) youDiedScreen.update(tpf);
 					repaint();
 				}
 			}
 			
 			if(player != null)
 			{
-				if(player.getHealth() > healthBarHealth) healthBarHealth += 0.1 * tpf;
-				if(player.getHealth() < healthBarHealth) healthBarHealth -= 0.1 * tpf;
+				if(player.getHealth() + 0.5 > healthBarProcess) healthBarProcess += tpf;
+				if(player.getHealth() - 0.5 < healthBarProcess) healthBarProcess -= tpf;
+				else healthBarProcess = player.getHealth();
+				
+				if(player.getMana() + 0.5 > manaBarProcess) manaBarProcess += tpf;
+				if(player.getMana() - 0.5 < manaBarProcess) manaBarProcess -= tpf;
+				else manaBarProcess = player.getMana();
 			}
-						
-			last = now;
-			
+									
 			try {
-				Thread.sleep(10);
+				Thread.sleep(2);
 			} catch (InterruptedException e) {
 				e.printStackTrace();
 			}

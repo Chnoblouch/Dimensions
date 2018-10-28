@@ -4,15 +4,18 @@ import java.awt.image.BufferedImage;
 
 import game.creature.Dragon;
 import game.creature.Monster;
+import game.environment.BlueStone;
 import game.environment.GrassBlock;
 import game.environment.GrassGround;
+import game.environment.IronOreStone;
+import game.environment.RedStone;
 import game.environment.Stone;
 import game.environment.Tree;
 import game.gfx.Screen;
 import game.gfx.SpriteFilter;
 import game.gfx.SpriteSheet;
 import game.item.Item;
-import game.item.ItemArrow;
+import game.item.arrows.ItemArrow;
 import game.obj.GameObject;
 import game.utils.Hitbox;
 import game.utils.HitboxFactory;
@@ -66,7 +69,7 @@ extends GameObject {
 						if(o instanceof Monster)
 						{		
 							level.removeObject(this);
-							((Monster) o).damage(4, level.player);
+							((Monster) o).damage(12, level.player);
 							((Monster) o).knockback(angle, 16);
 							
 							break;
@@ -74,9 +77,10 @@ extends GameObject {
 						else if(o instanceof Dragon)
 						{
 							level.removeObject(this);
-							((Dragon) o).damage(3, level.player);
+							((Dragon) o).damage(12, level.player);
 						}
-						else if((o instanceof GrassBlock && level.getID() != 2) || o instanceof Tree || o instanceof Stone)
+						else if((o instanceof GrassBlock && level.getID() != 2) || o instanceof Tree || o instanceof Stone || o
+								instanceof IronOreStone || o instanceof RedStone || o instanceof BlueStone)
 						{
 							flying = false;
 							break;

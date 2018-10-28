@@ -1,9 +1,0 @@
-slime=Schleim
-lobire=Lagogel
-walking_eye=Laufendes Auge
-rogo=Rogo
-
-dragon=Drache
-
-anyrava=Anyrava
-jessica=Jessica

@@ -38,7 +38,7 @@ extends GameObject {
 	{
 		if(screen.isInside(getX(), getY(), 128, 128))
 		{
-			screen.render(SpriteSheet.projectiles.getSprite(60, 0, 32, 32), getX(), getY(), 128, 128, angle, 0.9);
+			screen.render(SpriteSheet.projectiles.getSprite(56, 0, 32, 32), getX(), getY(), 128, 128, angle, 0.9);
 		}
 	}
 	
@@ -59,7 +59,7 @@ extends GameObject {
 			
 			if(o.isInRange(this) && o instanceof Creature && collides(o) && !(o instanceof MonsterGiantSlime) && !(o instanceof MonsterSlime)) 
 			{
-				((Creature) o).damage(5, this);
+				((Creature) o).damage(20, this);
 				level.removeObject(this);
 				
 				break;

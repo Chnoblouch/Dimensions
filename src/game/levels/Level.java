@@ -1,12 +1,14 @@
 package game.levels;
 
 import java.util.Comparator;
+import java.util.Random;
 
 import game.CollisionSpace;
 import game.Game;
 import game.creature.Player;
 import game.environment.GrassGround;
 import game.gfx.Screen;
+import game.gfx.SpriteSheet;
 import game.obj.GameObject;
 import game.utils.Block;
 import game.utils.DoublePoint;
@@ -87,19 +89,16 @@ public class Level
 	
 	public void render(Screen screen)
 	{
-		synchronized (Game.LOCK) 
+		objects.sort(new Comparator<GameObject>()
 		{
-			objects.sort(new Comparator<GameObject>()
+			@Override
+			public int compare(GameObject r1, GameObject r2) 
 			{
-				@Override
-				public int compare(GameObject r1, GameObject r2) 
-				{
-					return r1.getZIndex() - r2.getZIndex();
-				}
-			});
-			
-			objects.forEach(r -> r.render(screen));
-		}
+				return r1.getZIndex() - r2.getZIndex();
+			}
+		});
+		
+		objects.forEach(r -> r.render(screen));
 	}
 
 }

@@ -4,8 +4,12 @@ import java.awt.Color;
 import java.awt.geom.AffineTransform;
 import java.awt.image.AffineTransformOp;
 import java.awt.image.BufferedImage;
+import java.util.HashMap;
 
 public class SpriteFilter {
+	
+	private static HashMap<BufferedImage, BufferedImage> shadowStandingCache = new HashMap<>();
+	private static HashMap<BufferedImage, BufferedImage> shadowLaidCache = new HashMap<>();
 	
 	public static BufferedImage instantRotating(BufferedImage img, double degrees)
 	{
@@ -18,18 +22,25 @@ public class SpriteFilter {
 	
 	public static BufferedImage getShadowStanding(BufferedImage img)
 	{
-		BufferedImage shadow = new BufferedImage(img.getWidth() * 2, img.getHeight(), BufferedImage.TYPE_INT_ARGB);
+		BufferedImage shadow = shadowStandingCache.get(img);
 		
-		int addX = img.getWidth();
-		
-		for(int y = 0; y < img.getHeight(); y++)
-		{		
-			addX --;
+		if(shadow == null)
+		{
+			shadow = new BufferedImage(img.getWidth() * 2, img.getHeight(), BufferedImage.TYPE_INT_ARGB);
+					
+			int addX = img.getWidth();
 			
-			for(int x = 0; x < img.getWidth(); x++)
-			{
-				if(img.getRGB(x, y) >> 24 != 0) shadow.setRGB(x + addX, y, Color.black.getRGB());
+			for(int y = 0; y < img.getHeight(); y++)
+			{		
+				addX --;
+				
+				for(int x = 0; x < img.getWidth(); x++)
+				{
+					if(img.getRGB(x, y) >> 24 != 0) shadow.setRGB(x + addX, y, Color.black.getRGB());
+				}
 			}
+			
+			shadowStandingCache.put(img, shadow);
 		}
 		
 		return shadow;
@@ -37,14 +48,21 @@ public class SpriteFilter {
 	
 	public static BufferedImage getShadowLaid(BufferedImage img)
 	{
-		BufferedImage shadow = new BufferedImage(img.getWidth(), img.getHeight(), BufferedImage.TYPE_INT_ARGB);
+		BufferedImage shadow = shadowLaidCache.get(img);
 		
-		for(int y = 0; y < img.getHeight(); y++)
-		{					
-			for(int x = 0; x < img.getWidth(); x++)
-			{
-				if(img.getRGB(x, y) >> 24 != 0) shadow.setRGB(x, y, Color.black.getRGB());
+		if(shadow == null)
+		{
+			shadow = new BufferedImage(img.getWidth(), img.getHeight(), BufferedImage.TYPE_INT_ARGB);
+			
+			for(int y = 0; y < img.getHeight(); y++)
+			{					
+				for(int x = 0; x < img.getWidth(); x++)
+				{
+					if(img.getRGB(x, y) >> 24 != 0) shadow.setRGB(x, y, Color.black.getRGB());
+				}
 			}
+			
+			shadowLaidCache.put(img, shadow);
 		}
 		
 		return shadow;

@@ -8,10 +8,11 @@ import game.gfx.Font;
 import game.gfx.Screen;
 import game.gfx.SpriteFilter;
 import game.gfx.SpriteSheet;
-import game.item.ItemEyePiece;
+import game.item.monsterdrops.ItemEyePiece;
 import game.obj.Drop;
 import game.obj.GameObject;
 import game.particle.ParticleDestroying;
+import game.utils.Angles;
 import game.utils.Hitbox;
 import game.utils.HitboxFactory;
 import game.utils.TimeCounter;
@@ -32,7 +33,8 @@ extends Monster {
 	
 	public MonsterWalkingEye()
 	{
-		setHealth(10);
+		setMaxHealth(70);
+		setHealth(70);
 		setInvulnerableTime(500);
 		
 		walkTimer = new TimeCounter(75, () -> 
@@ -93,7 +95,7 @@ extends Monster {
 	}
 	
 	@Override
-	public void interactWith(Player player)
+	public void interactWith(Player player, boolean mouseOn)
 	{
 		damage(player.getAttackDamage(), player);
 		knockback(player.getAngle(this), 32);
@@ -146,17 +148,13 @@ extends Monster {
 			
 			if(!target.rideOnDragon && target.isInRange(this) && collides(target))
 			{
-				target.damage(2, this);
+				target.damage(22, this);
 				target.knockback(getAngle(target), 32);
 			}
 			
 			angle = getAngle(target);
+			lookDir = Angles.getLookDir(angle);
 			moveAlongAngle(angle, speed * tpf);
-			
-			if((angle > 315 && angle <= 360) || (angle > 0 && angle <= 45)) lookDir = 2;
-			else if(angle > 45 && angle <= 135) lookDir = 1;
-			else if(angle > 135 && angle <= 225) lookDir = 0;
-			else if(angle > 225 && angle <= 315) lookDir = 3;
 		}
 	}
 	

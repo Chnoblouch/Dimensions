@@ -92,8 +92,10 @@ extends NPC {
 	}
 	
 	@Override
-	public void interactWith(Player player)
+	public void interactWith(Player player, boolean mouseOn)
 	{
+		if(!mouseOn) return;
+		
 		classic = new Speech(TextLoader.getText("speech_anyrava"+new Random().nextInt(3)));
 		level.game.textBox.show(classic);
 	}
@@ -107,8 +109,8 @@ extends NPC {
 		if(isMouseOn())
 		{
 			String name = TextLoader.getText("npc_anyrava");
-			String part1 = name.split(" ")[0];
-			String part2 = name.split(" ")[1];
+			String part1 = name.split("/nl")[0];
+			String part2 = name.split("/nl")[1];
 			
 			screen.renderFont(part1, getX() + 128 - (Font.getTextWidth(part1, 32) / 2), getY() - 16, 32, Font.COLOR_WHITE, true);
 			screen.renderFont(part2, getX() + 128 - (Font.getTextWidth(part2, 32) / 2), getY() + 16, 32, Font.COLOR_WHITE, true);

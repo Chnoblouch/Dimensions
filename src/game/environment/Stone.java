@@ -7,8 +7,8 @@ import game.gfx.Screen;
 import game.gfx.Sounds;
 import game.gfx.SpriteFilter;
 import game.gfx.SpriteSheet;
-import game.item.ItemIronOre;
-import game.item.ItemStone;
+import game.item.ores.ItemIronOre;
+import game.item.resources.ItemStone;
 import game.obj.Drop;
 import game.obj.GameObject;
 import game.particle.ParticleDestroying;
@@ -69,8 +69,10 @@ extends GameObject {
 	}
 	
 	@Override
-	public void interactWith(Player player)
+	public void interactWith(Player player, boolean mouseOn)
 	{
+		if(!mouseOn) return;
+		
 		health -= player.getStoneDamage();
 		
 		if(health <= 0) destroy();
@@ -93,14 +95,6 @@ extends GameObject {
 		for(int i = 0; i < 4 + new Random().nextInt(5); i++)
 		{
 			Drop drop = new Drop(new ItemStone(), 1);
-			drop.setPosition(getX() + (new Random().nextInt((int) (Block.SIZE * 1.5))), 
-							 getY() + (new Random().nextInt((int) (Block.SIZE * 1.5))));
-			level.addObject(drop);
-		}
-		
-		for(int i = 0; i < 1 + new Random().nextInt(3); i++)
-		{
-			Drop drop = new Drop(new ItemIronOre(), 1);
 			drop.setPosition(getX() + (new Random().nextInt((int) (Block.SIZE * 1.5))), 
 							 getY() + (new Random().nextInt((int) (Block.SIZE * 1.5))));
 			level.addObject(drop);

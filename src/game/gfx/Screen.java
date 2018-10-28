@@ -21,6 +21,8 @@ public class Screen {
 	private Graphics2D g;
 	public int x;
 	
+	private double zoom = 1;
+	
 	public double camX, camY;
 		
 	public Screen(Game game)
@@ -31,9 +33,9 @@ public class Screen {
 	public boolean isInside(double x, double y, double w, double h)
 	{
 		return x + w >= camX && 
-			   x <= camX + DEFAULT_WIDTH && 
+			   x <= camX + (double) (DEFAULT_WIDTH / zoom) && 
 			   y + h >= camY &&
-			   y <= camY + DEFAULT_HEIGHT;
+			   y <= camY + (double) (DEFAULT_HEIGHT / zoom);
 	}
 	
 	public boolean isInside(Hitbox hb)
@@ -48,8 +50,8 @@ public class Screen {
 		
 		if(game.player != null)
 		{		
-			camX = game.player.getX() + 128 - (DEFAULT_WIDTH / 2);
-			camY = game.player.getY() + 128 - (DEFAULT_HEIGHT / 2);
+			camX = game.player.getX() + 128 - (DEFAULT_WIDTH / 2 / zoom);
+			camY = game.player.getY() + 128 - (DEFAULT_HEIGHT / 2 / zoom);
 						
 //			camX = ((LevelSkyWorld) game.getLevel()).dragon.getX() + 384 - (WIDTH / 2);
 //			camY = ((LevelSkyWorld) game.getLevel()).dragon.getY() + 384 - (HEIGHT / 2);
@@ -61,6 +63,16 @@ public class Screen {
 		return 1.0 / ((double) DEFAULT_WIDTH / WIDTH);
 	}
 	
+	public void setZoom(double zoom)
+	{
+		this.zoom = zoom;
+	}
+	
+	public double getZoom()
+	{
+		return zoom;
+	}
+	
 	public void render(BufferedImage sprite, double x, double y, double w, double h, double rot, double alpha)
 	{
 		if(alpha < 0) alpha = 0;
@@ -68,16 +80,24 @@ public class Screen {
 
 		AffineTransform aft = g.getTransform();
 		g.scale(getScale(), getScale());
-        g.rotate(Math.toRadians(rot), this.x + (x + (w / 2) - camX), y + (h / 2) - camY);
-		AlphaComposite ac = AlphaComposite.getInstance(AlphaComposite.SRC_OVER, (float) alpha);
-		g.setComposite(ac);
+		g.scale(zoom, zoom);
+        if(rot != 0) g.rotate(Math.toRadians(rot), this.x + (x + (w / 2) - camX), y + (h / 2) - camY);
+		
+        if(alpha != 1)
+        {
+        	AlphaComposite ac = AlphaComposite.getInstance(AlphaComposite.SRC_OVER, (float) alpha);
+    		g.setComposite(ac);
+        }
 		
 		g.drawImage(sprite, (int) (x - camX + this.x), (int) (y - camY), (int) w, (int) h, null);
 		
 		g.setTransform(aft);
 		
-		AlphaComposite acr = AlphaComposite.getInstance(AlphaComposite.SRC_OVER, 1);
-		g.setComposite(acr);
+		if(alpha != 1)
+		{
+			AlphaComposite acr = AlphaComposite.getInstance(AlphaComposite.SRC_OVER, 1);
+			g.setComposite(acr);
+		}
 	}
 	
 	public void renderGUI(BufferedImage sprite, double x, double y, double w, double h, double rot, double alpha)

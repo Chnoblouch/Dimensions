@@ -7,8 +7,8 @@ import game.gfx.Screen;
 import game.gfx.Sounds;
 import game.gfx.SpriteFilter;
 import game.gfx.SpriteSheet;
-import game.item.ItemApple;
-import game.item.ItemWood;
+import game.item.food.ItemApple;
+import game.item.resources.ItemWood;
 import game.obj.Drop;
 import game.obj.GameObject;
 import game.particle.ParticleDestroying;
@@ -63,8 +63,10 @@ extends GameObject {
 	}
 	
 	@Override
-	public void interactWith(Player player)
+	public void interactWith(Player player, boolean mouseOn)
 	{
+		if(!mouseOn) return;
+		
 		health -= player.getWoodDamage();
 		
 		if(health <= 0) destroy();

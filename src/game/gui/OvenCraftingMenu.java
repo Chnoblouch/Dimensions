@@ -55,4 +55,14 @@ extends InventoryMenu {
 	{
 		for(int i = 0; i < buttons.size(); i++) buttons.get(i).render(screen);
 	}
+	
+	@Override
+	public void renderInfo(Screen screen)
+	{
+		for(int i = 0; i < buttons.size(); i++)
+		{
+			CraftingButton b = buttons.get(i);
+			if(b.isMouseOn()) b.renderInfo(screen);
+		}
+	}
 }

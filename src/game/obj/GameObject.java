@@ -187,7 +187,7 @@ public class GameObject
 	public int getZIndex() { return (int) (y + 128); }
 	public void readData(int data) {}
 	public void brightness(double brightness) {}
-	public void interactWith(Player player) {}
+	public void interactWith(Player player, boolean mouseOn) {}
 	public void update(double tpf) {}
 	public boolean doUpdate() { return true; }
 	public boolean updateOutside() { return false; }

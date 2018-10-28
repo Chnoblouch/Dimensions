@@ -113,5 +113,71 @@ public class CraftingButton {
 			}
 		}
 	}
+	
+	public void renderInfo(Screen screen)
+	{
+		int mx = (int) menu.inventory.game.getMouse().x;
+		int my = (int) menu.inventory.game.getMouse().y;
+		
+		int dmx = 48; // x distance to mouse
+		int dmy = -48; // y distance to mouse
+		int fontSize = 32;
+				
+		String longestPart = recipe.getResult().getName();
+
+		if(recipe.getResult().getDescription() != null) 
+		{
+			int longestPartLength = longestPart.length();
+			for(int i = 0; i < recipe.getResult().getDescription().length; i++) 
+			{
+				String text = recipe.getResult().getDescription()[i];
+				if(text.length() > longestPartLength)
+				{
+					longestPartLength = text.length();
+					longestPart = text;
+				}
+			}
+		}
+		
+		int bx = mx + dmx; // border x;
+		int by = my + dmy; // border y;
+		int bw = (int) Math.ceil(Font.getTextWidth(longestPart, fontSize)); // border with
+		int bh = recipe.getResult().getDescription() == null ? 32 : 32 + recipe.getResult().getDescription().length * 32; // border height
+		
+		screen.renderGUI(SpriteSheet.itemInfo.getSprite(0, 0, 8, 8), bx, by, 32, 32, 0, 1);		
+		screen.renderGUI(SpriteSheet.itemInfo.getSprite(16, 0, 8, 8), bx + bw, by, 32, 32, 0, 1);
+		screen.renderGUI(SpriteSheet.itemInfo.getSprite(0, 16, 8, 8), bx, by + bh, 32, 32, 0, 1);		
+		screen.renderGUI(SpriteSheet.itemInfo.getSprite(16, 16, 8, 8), bx + bw, by + bh, 32, 32, 0, 1);
+		
+		for(int i = 0; i < bw - 32; i+= 32) 
+		{ 
+			screen.renderGUI(SpriteSheet.itemInfo.getSprite(8, 0, 8, 8), bx + 32 + i, by, 32, 32, 0, 1); 
+			screen.renderGUI(SpriteSheet.itemInfo.getSprite(8, 16, 8, 8), bx + 32 + i, by + bh, 32, 32, 0, 1); 
+		}
+		
+		for(int i = 0; i < bh - 32; i+= 32) 
+		{ 
+			screen.renderGUI(SpriteSheet.itemInfo.getSprite(0, 8, 8, 8), bx, by + i + 32, 32, 32, 0, 1); 
+			screen.renderGUI(SpriteSheet.itemInfo.getSprite(16, 8, 8, 8), bx + bw, by + 32 + i, 32, 32, 0, 1); 
+		}
+		
+		for(int fy = by + 32; fy < by + bh; fy+= 32)
+		{
+			for(int fx = bx + 32; fx < bx + bw; fx+= 32)
+			{
+				screen.renderGUI(SpriteSheet.itemInfo.getSprite(8, 8, 8, 8), fx, fy, 32, 32, 0, 1); 
+			}
+		}
+		
+		screen.renderFont(recipe.getResult().getName(), bx + 16, by + 16, fontSize, Font.COLOR_WHITE, false);
+		
+		if(recipe.getResult().getDescription() != null)
+		{
+			for(int i = 0; i < recipe.getResult().getDescription().length; i++)
+			{
+				screen.renderFont(recipe.getResult().getDescription()[i], bx + 16, by + 48 + i * 32, fontSize, Font.COLOR_WHITE, false);
+			}
+		}
+	}
 
 }

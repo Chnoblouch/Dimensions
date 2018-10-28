@@ -20,14 +20,15 @@ public class TimeCounter {
 		
 	public void count(double tpf)
 	{
-		counter += (25 * tpf);
+		counter += 25 * tpf;
 		
 		if(counter >= time) timeListener.timeIsUp();
 	}
 	
 	public void reset()
 	{
-		counter = 0;
+		if(counter > time) counter -= time;
+		else counter = 0;
 	}
 	
 }

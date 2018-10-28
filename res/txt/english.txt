@@ -1,0 +1,147 @@
+item_wood=Wood
+item_stone=Stone
+item_slime=Slime
+item_apple=Apple
+item_wood_axe=Wood Axe
+item_wood_pickaxe=Wood Pickaxe
+item_wood_shovel=Wood Shovel
+item_wood_sword=Wood Sword
+item_stone_axe=Stone Axe
+item_stone_pickaxe=Stone Pickaxe
+item_stone_shovel=Stone Shovel
+item_stone_sword=Stone Sword
+item_meat=Meat
+item_workbench=Workbench
+item_oven=Oven
+item_anvil=Anvil
+item_iron_ore=Iron Ore
+item_iron_ingot=Iron Ingot
+item_iron_axe=Iron Axe
+item_iron_pickaxe=Iron Pickaxe
+item_iron_shovel=Iron Shovel
+item_iron_sword=Iron Sword
+item_iron_hoe=Iron Hoe
+item_iron_hammer=Iron Hammer
+item_iron_helmet=Iron Helmet
+item_iron_chestplate=Iron Chestplate
+item_iron_leggings=Iron Leggings
+item_iron_boots=Iron Boots
+item_iron_shield=Iron Shield
+item_feather=Feather
+item_eye_piece=Eye Piece
+item_bow=Bow
+item_arrow=Arrow
+item_taykolos=Taykolos
+item_frost_pearl=Frost Pearl
+item_alchemy_table=Alchemy Table
+item_health_potion=Potion of Healing
+item_night_herb=Night Herb
+item_speed_potion=Potion of Speed
+item_mushroom=Mushroom
+item_red_stone=Red glowing Stone
+item_blue_stone=Blue glowing Stone
+item_shimmering_slime=Shimmering Slime
+item_meat_cooked=Cooked Meat
+item_gold_ore=Gold Ore
+item_gold_ingot=Gold Ingot
+item_gold_axe=Gold Axe
+item_gold_pickaxe=Gold Pickaxe
+item_gold_shovel=Gold Shovel
+item_gold_sword=Gold Sword
+item_gold_hoe=Gold Hoe
+item_gold_hammer=Gold Hammer
+item_gold_helmet=Gold Helmet
+item_gold_chestplate=Gold Chestplate
+item_gold_leggings=Gold Leggings
+item_gold_boots=Gold Boots
+item_gold_shield=Gold Shield
+item_wizard_hat=Wizard Hat
+item_wizard_robe=Wizard Robe
+item_wizard_trousers=Wizard Trousers
+item_wizard_boots=Wizard Boots
+item_crystal_staff=Crystal Staff
+
+
+
+
+
+
+item_descr_slime=Like slime, but healing
+item_descr_taykolos=Glowing restless
+item_descr_frost_pearl=Pure compression of cold
+item_descr_night_herb=Filled with the elixir of night
+item_descr_health_potion=Healthy
+item_descr_speed_potion=Run like a rocket
+item_descr_red_stone=Looks dangerous
+item_descr_blue_stone=Feels like ice
+item_descr_shimmering_slime=Glowing mysterious
+item_descr_crystal_staff=Shoots crystal splinters
+
+
+
+
+
+monster_slime=Slime
+monster_lobire=Lobire
+monster_walking_eye=Walking Eye
+monster_rogo=Rogo
+monster_giant_slime=Giant Slime
+
+creature_dragon=Dragon
+
+npc_bruno=Lumberjack/nlBruno
+npc_anyrava=Dragon Tamer/nlAnyrava
+npc_jessica=Sword Master/nlJessica
+
+
+
+
+
+effect_speed=Speed
+effect_regeneration=Regeneration
+
+
+
+
+
+speech_anyrava0=Good morning, you Full-Graid-Wooden-Door!
+speech_anyrava1=Eldenir attacked today another dragon/nlwithout any reaseon! They didn't/nlcalm down for hours...!
+speech_anyrava2=Have you already given your/nldragon a name? 
+speech_anyrava_unused0=Wenn Käse Löcher hat, hat man mehr Löcher,/nldesto mehr Käse man hat, nicht wahr?/npDa man aber mit mehr Löchern/nlweniger Käse hat, würde das bedeuten,/nldass man weniger Käse hat,/nldesto mehr Käse man hat!
+speech_anyrava_unused1=Wenn man in ein Netz ein Loch macht,/nldann hat es eines weniger.
+
+speech_anyrava_greetings=Hello, you Full-Graid-Wooden-Door!/npI haven't saw/nlyour face here./npDo you want to learn how/nlto tame dragons?/npYes?/nlOk, i land to your place.
+speech_anyrava_explanation=So, taming dragons is very easy./nlFirst, you have to take a peace/nlof meat in your main hand./npThen you wait until a dragon comes/nland lands near you. Then you have to/nlmount him with your EMPTY other hand/npBut be careful!/nlIf you don't give him the meat long enough,/nlhe flies away.
+
+speech_anyrava_warning=HEY!! What are you doing?!/npLeave Eldenir alone if you/nldon't want any trouble!
+speech_anyrava_angry=THAT'S ENOUGH!!
+
+
+speech_jessica0=What's up, you weakling?/nlHow many monsters did you/nlkill today? None?/nlAs i'm saying! You're a weakling!
+speech_jessica1=Boah, my sword is today/nlvery rusty! Do you happen to have/nlrust remover for swords?
+speech_jessica2=Ahh, this monsters./nlNever spawn enough of those!
+speech_jessica_explanation=In this game, there are/nlcurrently only five weapons!/nlWhat a lazy developer!/npThe wood sword, the stone sword,/nlthe iron sword, the bow and the Taykolos
+
+
+speech_bruno0=Leave some trees for me,/nlbefore you chopped down all of them!
+speech_bruno1=A full beard would look good on you!
+speech_bruno2=Weird that shovels are completly/nluseless until now.
+speech_bruno_explanation=First, i would chop down/nlsome trees, then craft with the/nlwood a pickaxe/npand collect stones and iron and/nlmake with that some equipment/nland go in other dimensions to/npfind more things for even/nlbetter equipment!
+
+
+
+crafting_ingredients=Ingredients
+
+
+
+you_died0=You died!
+you_died1=Press SPACE
+
+
+
+wood_damage=Wood Damage
+stone_damage=Stone Damage
+melee_damage=Melee Damage
+ranged_damage=Ranged Damage
+protection=Protection
+uses_x_mana=Uses /in Mana

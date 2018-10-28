@@ -8,7 +8,7 @@ import game.gfx.Font;
 import game.gfx.Screen;
 import game.gfx.SpriteFilter;
 import game.gfx.SpriteSheet;
-import game.item.ItemSlime;
+import game.item.monsterdrops.ItemSlime;
 import game.obj.Drop;
 import game.obj.GameObject;
 import game.particle.ParticleDestroying;
@@ -33,15 +33,35 @@ extends Monster {
 	
 	public MonsterSlime()
 	{
-		setHealth(10);
+		setMaxHealth(40);
+		setHealth(40);
 		setInvulnerableTime(500);
 		
-		standTimer = new TimeCounter(1000, () -> {
-			jump = true;
-			jumpMotion = - 24;
-			angle = Angles.getAngle(getHitbox().center(), target.getHitbox().center());
+		standTimer = new TimeCounter(1000, () -> 
+		{
+			jump();
 			standTimer.reset();
 		});
+	}
+	
+	public void fromGiantSlime()
+	{
+		standTimer.setTime(100);
+	}
+	
+	private void jump()
+	{
+		jump = true;
+		jumpMotion = -24;
+		angle = Angles.getAngle(getHitbox().center(), target.getHitbox().center());
+		standTimer.reset();
+	}
+		
+	public void giantJump(double angle)
+	{
+		this.angle = angle;
+		jump = true;
+		jumpMotion = -64;
 	}
 	
 	@Override
@@ -90,7 +110,7 @@ extends Monster {
 	}
 	
 	@Override
-	public void interactWith(Player player)
+	public void interactWith(Player player, boolean mouseOn)
 	{
 		damage(player.getAttackDamage(), player);
 		knockback(player.getAngle(this), 24);
@@ -122,7 +142,7 @@ extends Monster {
 			level.addObject(particle);
 		}
 		
-		for(int i = 0; i < 1 + new Random().nextInt(3); i++)
+		for(int i = 0; i < 3 + new Random().nextInt(3); i++)
 		{
 			Drop drop = new Drop(new ItemSlime(), 1);
 			drop.setPosition(getX() + (new Random().nextInt(Block.SIZE)), getY() + (new Random().nextInt(Block.SIZE)));
@@ -141,7 +161,7 @@ extends Monster {
 		{
 			if(!target.rideOnDragon && target.isInRange(this) && collides(target)) 
 			{
-				target.damage(3, this);
+				target.damage(15, this);
 				target.knockback(getAngle(target), 24);
 			}
 			

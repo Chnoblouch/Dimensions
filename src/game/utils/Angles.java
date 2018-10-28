@@ -26,4 +26,13 @@ public class Angles {
 		return new DoublePoint(x, y);
 	}
 
+	public static int getLookDir(double angle)
+	{
+		if((angle > 315 && angle <= 360) || (angle > 0 && angle <= 45)) return 2;
+		else if(angle > 45 && angle <= 135) return 1;
+		else if(angle > 135 && angle <= 225) return 0;
+		else if(angle > 225 && angle <= 315) return 3;
+		
+		return 2;
+	}
 }

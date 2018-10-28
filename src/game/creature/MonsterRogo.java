@@ -9,7 +9,7 @@ import game.gfx.Screen;
 import game.gfx.Sounds;
 import game.gfx.SpriteFilter;
 import game.gfx.SpriteSheet;
-import game.item.ItemSlime;
+import game.item.monsterdrops.ItemSlime;
 import game.obj.Drop;
 import game.obj.GameObject;
 import game.particle.ParticleDestroying;
@@ -36,7 +36,8 @@ extends Monster {
 	
 	public MonsterRogo()
 	{
-		setHealth(10);
+		setMaxHealth(50);
+		setHealth(50);
 		setInvulnerableTime(500);
 		
 		startRollingTimer = new TimeCounter(100, () -> 
@@ -102,7 +103,7 @@ extends Monster {
 	}
 	
 	@Override
-	public void interactWith(Player player)
+	public void interactWith(Player player, boolean mouseOn)
 	{
 		damage(player.getAttackDamage(), player);
 		knockback(player.getAngle(this), 24);
@@ -111,7 +112,7 @@ extends Monster {
 	@Override
 	public void getDamage(GameObject attacker)
 	{
-		Sounds.rogoHurt.play(0, getX() + (Block.SIZE / 2), getY() + (Block.SIZE / 2), level.game.getCamX(), level.game.getCamY());
+		Sounds.rogoHurt.play(4, getX() + (Block.SIZE / 2), getY() + (Block.SIZE / 2), level.game.getCamX(), level.game.getCamY());
 		
 		for(int i = 0; i < 4; i++)
 		{
@@ -157,7 +158,7 @@ extends Monster {
 		{
 			if(!target.rideOnDragon && target.isInRange(this) && collides(target)) 
 			{
-				target.damage(3, this);
+				target.damage(20, this);
 				target.knockback(getAngle(target), 24);
 			}
 						

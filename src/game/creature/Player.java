@@ -5,6 +5,7 @@ import java.awt.event.KeyEvent;
 import java.util.Random;
 
 import game.Game;
+import game.TextLoader;
 import game.effects.Effect;
 import game.effects.EffectHandling;
 import game.gfx.Font;
@@ -14,6 +15,7 @@ import game.gfx.SpriteFilter;
 import game.gfx.SpriteSheet;
 import game.gui.Inventory;
 import game.gui.InventoryMenu;
+import game.gui.Slot;
 import game.item.Item;
 import game.obj.Drop;
 import game.obj.GameObject;
@@ -43,18 +45,26 @@ extends Creature {
 	private Item interactItem;
 	private TimeCounter interactTimer;
 	
-	private boolean eat = false;
+	private boolean eating = false;
 	private int eatStage;
 	private int biteCounter = 0;
 	private Item eatItem;
 	private TimeCounter eatTimer;
 	
+	public boolean aiming = false;
+	public boolean shooting = false;
+	private TimeCounter shootTimer;
+	
 	private boolean protect = false;
 	private Item protectItem;
+	
+	private double mana = 100.0;
 	
 	private boolean impressed = false;
 	private double exclamationMark1 = 0;
 	private double exclamationMark2 = 0;
+	
+	public int deadTime = 0;
 	
 	private Game game;
 	
@@ -72,7 +82,8 @@ extends Creature {
 		this.inventory = game.inventory;
 		
 		setInvulnerableTime(1000);
-		setMaxHealth(20);
+		setMaxHealth(100);
+		setHealth(100);
 		
 		effectHandling = new EffectHandling();
 				
@@ -84,7 +95,8 @@ extends Creature {
 			walkTimer.reset();
 		});
 		
-		interactTimer = new TimeCounter(100, () -> {
+		interactTimer = new TimeCounter(100, () -> 
+		{
 			interactStage ++;
 			if(interactStage >= 4) 
 			{
@@ -95,7 +107,8 @@ extends Creature {
 			interactTimer.reset();
 		});
 		
-		eatTimer = new TimeCounter(150, () -> {
+		eatTimer = new TimeCounter(150, () -> 
+		{
 			if(eatStage == 0) eatStage = 1;
 			else if(eatStage == 1) 
 			{
@@ -106,12 +119,18 @@ extends Creature {
 			
 			if(biteCounter >= 5)
 			{
-				eat = false;
+				eating = false;
 				eatStage = 0;
 				biteCounter = 0;
 			}
 			
 			eatTimer.reset();
+		});
+		
+		shootTimer = new TimeCounter(500, () -> 
+		{
+			shooting = false;
+			shootTimer.reset();
 		});
 	}
 	
@@ -173,8 +192,38 @@ extends Creature {
 	@Override
 	public void die()
 	{
-		game.changeLevel(0);
-		setHealth(20);
+		if(isDeath()) return;
+		
+//		game.changeLevel(0);
+//		setHealth(20);
+		
+		eating = false;
+		eatStage = 0;		
+		eatTimer.reset();
+			
+		aiming = false;
+		shooting = false;
+		shootTimer.reset();
+		
+		protect = false;
+		
+		Sounds.youDied.play(0, 0);
+		level.game.youDiedScreen();
+		level.game.inventory.setVisible(false);
+		
+		for(int i = 0; i < inventory.slots.size(); i++)
+		{
+			Slot s = inventory.slots.get(i);
+			
+			if(!s.isEmpty())
+			{
+				Drop drop = new Drop(s.getItem(), s.getItemCount());
+				drop.setPosition(getX() + 128 - 256 + new Random().nextInt(512 + 1), getY() + 128 - 256 + new Random().nextInt(512 + 1));
+				level.addObject(drop);
+				
+				s.clear();
+			}
+		}
 	}
 	
 	public Hitbox getInteractionArea()
@@ -219,20 +268,29 @@ extends Creature {
 	{		
 		sy = lookDir * 64;
 				
-		if(!rideOnDragon)
+		if(!isDeath())
 		{
-			if(!protect)
+			if(!rideOnDragon)
 			{
-				if(!eat)
+				if(!aiming)
 				{
-					if(!interact)
+					if(!shooting)
 					{
-						if(!walk) sx = 0;
-						else sx = walkSprites[walkStage];
-					} else sx = 320 + (interactStage * 64);
-				} else sx = 640 + (eatStage * 64);
-			} else sx = 768;
-		} else sx = 576;
+						if(!protect)
+						{
+							if(!eating)
+							{
+								if(!interact)
+								{
+									if(!walk) sx = 0;
+									else sx = walkSprites[walkStage];
+								} else sx = 320 + (interactStage * 64);
+							} else sx = 640 + (eatStage * 64);
+						} else sx = 768;
+					} else sx = 960;
+				} else sx = 896;
+			} else sx = 576;
+		} else sx = 832;
 	}
 	
 	public void interact(double x, double y, Item item)
@@ -246,22 +304,27 @@ extends Creature {
 		for(int i = 0; i < level.objects.size(); i++)
 		{
 			GameObject o = level.objects.get(i);
-			if(o.isMouseInside(x, y) && o.getClickHitbox().intersects(getInteractionArea()) && o != this) o.interactWith(this);
+			if(o.getHitbox().intersects(getInteractionArea()) && o != this) o.interactWith(this, o.isMouseInside(x, y));
 		} 
 	}
 	
 	public void eat(Item item)
 	{
-		if(eat || protect) return;
+		if(eating || protect) return;
 		
-		eat = true;
+		eating = true;
 		eatItem = item;
 		eatTimer.reset();
 	}
 	
+	public boolean isEating()
+	{
+		return eating;
+	}
+	
 	public void protect(Item item)
 	{
-		if(protect || eat) return;
+		if(protect || eating) return;
 		
 		protect = true;
 		protectItem = item;
@@ -270,6 +333,28 @@ extends Creature {
 	public void stopProtecting()
 	{
 		protect = false;
+	}
+	
+	public void setMana(double mana)
+	{
+		this.mana = mana;
+		if(mana > 100) mana = 100;
+	}
+	
+	public void addMana(double mana)
+	{
+		this.mana += mana;
+		if(mana > 100) mana = 100;
+	}
+	
+	public void removeMana(double mana)
+	{
+		this.mana -= mana;
+	}
+	
+	public double getMana()
+	{
+		return mana;
 	}
 	
 	public void impressed()
@@ -294,7 +379,7 @@ extends Creature {
 	public double getAttackDamage()
 	{
 		if(!inventory.getMainHandSlot().isEmpty()) return inventory.getMainHandItem().getAttackDamage();
-		return 1;
+		return 3;
 	}
 
 	public double getWoodDamage()
@@ -329,8 +414,12 @@ extends Creature {
 	@Override
 	public void render(Screen screen)
 	{
-		screen.render(SpriteFilter.getShadowStanding(SpriteSheet.player.getSprite(sx, sy, 64, 64)), getX() - 64, getY(), 512, 256, 0, 0.25);
-//		screen.render(SpriteSheet.shadows.getSprite(0, 0, 16, 16), getX() + 128 - 32, getY() + 160, 64, 64, 0, 0.75);
+		if(!isDeath())
+			screen.render(SpriteFilter.getShadowStanding(SpriteSheet.player.getSprite(sx, sy, 64, 64)), getX() - 64, getY(), 512, 256, 0, 0.25);
+		else
+			screen.render(SpriteFilter.getShadowLaid(SpriteSheet.player.getSprite(sx, sy, 64, 64)), getX() + 16, getY() - 16, 256, 256, 0, 0.25);
+
+		//		screen.render(SpriteSheet.shadows.getSprite(0, 0, 16, 16), getX() + 128 - 32, getY() + 160, 64, 64, 0, 0.75);
 		screen.render(SpriteSheet.player.getSprite(sx, sy, 64, 64), getX(), getY(), 256, 256, 0, invulnerableInvisible ? 0.5 : 1);
 			
 		if(impressed)
@@ -348,8 +437,8 @@ extends Creature {
 		}
 		
 		if(!inventory.getHelmetSlot().isEmpty()) inventory.getHelmet().renderOnBody(screen, this);
-		if(!inventory.getChestplateSlot().isEmpty()) inventory.getChestplate().renderOnBody(screen, this);
 		if(!inventory.getLeggingsSlot().isEmpty()) inventory.getLeggings().renderOnBody(screen, this);
+		if(!inventory.getChestplateSlot().isEmpty()) inventory.getChestplate().renderOnBody(screen, this);
 		if(!inventory.getBootsSlot().isEmpty()) inventory.getBoots().renderOnBody(screen, this);
 		
 		if(lookDir != 3)
@@ -358,11 +447,11 @@ extends Creature {
 				inventory.getOffHandItem().renderInHand(screen, this, Item.MAIN_HAND);
 		}
 		
-		if(!interact && !eat && inventory.getMainHandItem() != null)
+		if(!interact && !eating && inventory.getMainHandItem() != null)
 			inventory.getMainHandItem().renderInHand(screen, this, Item.MAIN_HAND);
 		else if(interact && interactItem != null)
 			interactItem.renderInHand(screen, this, Item.MAIN_HAND);
-		else if(eat && eatItem != null)
+		else if(eating && eatItem != null)
 			eatItem.renderInHand(screen, this, Item.MAIN_HAND);
 		
 		if(lookDir == 3)
@@ -392,13 +481,17 @@ extends Creature {
 		if(key == KeyEvent.VK_A) left = true;
 		if(key == KeyEvent.VK_S) down = true;  
 		if(key == KeyEvent.VK_D) right = true;
-		if(key == KeyEvent.VK_E) inventory.changeVisibility(InventoryMenu.MENU_HAND_CRAFTING);
+		if(key == KeyEvent.VK_E && !isDeath()) inventory.changeVisibility(InventoryMenu.MENU_HAND_CRAFTING);
 		if(key == KeyEvent.VK_SHIFT)
 		{
 			if(rideOnDragon) leaveDragon();
 		}
 		
-		if(key == KeyEvent.VK_ENTER) SaveManager.save(SaveInformation.convertGame(game));
+		if(key == KeyEvent.VK_ENTER) 
+		{
+			SaveManager.save(SaveInformation.convertGame(game));
+			game.saved = true;
+		}
 		if(key == KeyEvent.VK_C) setPosition(level.getPlayerSpawn().x, level.getPlayerSpawn().y);
 		
 		if(key == KeyEvent.VK_RIGHT) creature ++;
@@ -414,18 +507,28 @@ extends Creature {
 		{
 			if(!rideOnDragon)
 			{
-//				Creature c = null;
-//				
-//				switch (creature) {
-//					case 0: c = new MonsterSlime(); break;
-//					case 1: c = new MonsterLobire(); break;
-//					case 2: c = new MonsterWalkingEye(); break;
-//					case 3: c = new MonsterRogo(); break;
-//					case 4: c = new Dragon(); break;
-//				}
-//				
-//				c.setPosition(getX(), getY() + 200);
-//				level.addObject(c);
+				if(isDeath() && deadTime >= 8000) 
+				{
+					respawn();
+					deadTime = 0;
+					game.screen.setZoom(1);
+					game.changeLevel(0);
+					game.hideYouDiedScreen();
+					Sounds.youDied.stop();
+				}
+				
+				Creature c = null;
+				
+				switch (creature) {
+					case 0: c = new MonsterSlime(); break;
+					case 1: c = new MonsterLobire(); break;
+					case 2: c = new MonsterWalkingEye(); break;
+					case 3: c = new MonsterRogo(); break;
+					case 4: c = new Dragon(); break;
+				}
+				
+				c.setPosition(getX(), getY() + 200);
+				level.addObject(c);
 				
 			} else dragon.shootFireball();
 		}
@@ -457,12 +560,17 @@ extends Creature {
 
 	public void mouseReleased(DoublePoint pos, int button)
 	{
+		double xInCam = pos.x + level.game.screen.camX;
+		double yInCam = pos.y + level.game.screen.camY;
+		
 		if(button == 1) 
 		{
-			if(!inventory.getMainHandSlot().isEmpty()) inventory.getMainHandItem().release(this);
+			if(!inventory.getMainHandSlot().isEmpty())
+				inventory.getMainHandItem().release(xInCam, yInCam, level, this, inventory.getMainHandSlot());
 		} else if(button == 3)
 		{			
-			if(!inventory.getOffHandSlot().isEmpty()) inventory.getOffHandItem().release(this);
+			if(!inventory.getOffHandSlot().isEmpty()) 
+				inventory.getOffHandItem().release(xInCam, yInCam, level, this, inventory.getOffHandSlot());
 		}
 	}
 	
@@ -471,61 +579,87 @@ extends Creature {
 	{		
 		super.update(tpf);
 		
-		speed = 12;
-		if(effectHandling.hasEffect(Effect.ID_SPEED)) speed = 18;
-		
-		effectHandling.updateEffects(tpf);
-		
-		if(!rideOnDragon && !eat)
+		if(!isDeath())
 		{
-			if(right) 
-			{
-				if(!protect) move(speed * tpf, 0);
-				lookDir = 1;
-			}
-			else if(left) 
-			{
-				if(!protect) move(-speed * tpf, 0);
-				lookDir = 3;
-			}
+			speed = 12;
+			if(effectHandling.hasEffect(Effect.ID_SPEED)) speed = 18;
 			
-			if(up) 
-			{
-				if(!protect) move(0, -speed * tpf);
-				lookDir = 2;
-			}
-			else if(down) 
-			{
-				if(!protect) move(0, speed * tpf);
-				lookDir = 0;
-			}
-		} else if(rideOnDragon)
-		{
-			setPosition(dragon.getX() + 384 - 128 + (getMoveDirection(dragon.angle).x * 32), 
-						dragon.getY() + 384 - 128 + (getMoveDirection(dragon.angle).y * 32));
+			effectHandling.updateEffects(tpf);
 			
-			if((dragon.angle > 315 && dragon.angle <= 360) || (dragon.angle > 0 && dragon.angle <= 45)) lookDir = 2;
-			else if(dragon.angle > 45 && dragon.angle <= 135) lookDir = 1;
-			else if(dragon.angle > 135 && dragon.angle <= 225) lookDir = 0;
-			else if(dragon.angle > 225 && dragon.angle <= 315) lookDir = 3;
+			if(aiming) lookDir = Angles.getLookDir(getAngleToMouse());
+			
+			if(!rideOnDragon && !eating && !aiming && !shooting)
+			{
+				if(right) 
+				{
+					if(!protect) move(speed * tpf, 0);
+					lookDir = 1;
+				}
+				else if(left) 
+				{
+					if(!protect) move(-speed * tpf, 0);
+					lookDir = 3;
+				}
+				
+				if(up) 
+				{
+					if(!protect) move(0, -speed * tpf);
+					lookDir = 2;
+				}
+				else if(down) 
+				{
+					if(!protect) move(0, speed * tpf);
+					lookDir = 0;
+				}
+			} else if(rideOnDragon)
+			{
+				setPosition(dragon.getX() + 384 - 128 + (getMoveDirection(dragon.angle).x * 32), 
+							dragon.getY() + 384 - 128 + (getMoveDirection(dragon.angle).y * 32));
+				
+				if((dragon.angle > 315 && dragon.angle <= 360) || (dragon.angle > 0 && dragon.angle <= 45)) lookDir = 2;
+				else if(dragon.angle > 45 && dragon.angle <= 135) lookDir = 1;
+				else if(dragon.angle > 135 && dragon.angle <= 225) lookDir = 0;
+				else if(dragon.angle > 225 && dragon.angle <= 315) lookDir = 3;
+			}
+						
+			addMana(0.05 * tpf);
+			
+			if(impressed)
+			{
+				if(exclamationMark1 > 0) exclamationMark1 -= 0.015 * tpf;
+				
+				if(exclamationMark1 <= 0.95 && exclamationMark2 == 0) exclamationMark2 = 1.0;
+				if(exclamationMark1 <= 0.95 && exclamationMark2 > 0) exclamationMark2 -= 0.015 * tpf;
+				
+				if(exclamationMark1 <= 0.95 && exclamationMark2 <= 0) impressed = false;
+			}
+					
+			walk = left || right || up || down;
+			
+			if(walk) walkTimer.count(tpf);
+			if(interact) interactTimer.count(tpf);
+			if(eating) eatTimer.count(tpf);
+			if(shooting) shootTimer.count(tpf);
+		} else 
+		{			
+			deadTime += 25 * tpf;
+			
+			if(game.screen.getZoom() > 0.4) 
+			{
+				double start = 0.0;
+				double end = 8000.0;
+				double process = deadTime;
+											
+				process = (process - start) / (end - start);	
+				if(process > 1.0) process = 1.0;
+				if(process < 0.0) process = 0.0;
+								
+				process = process * process * (3.0 - 2.0 * process);
+														
+				game.screen.setZoom(1.0d - process * 0.4);
+			}
 		}
 		
-		if(impressed)
-		{
-			if(exclamationMark1 > 0) exclamationMark1 -= 0.015 * tpf;
-			
-			if(exclamationMark1 <= 0.95 && exclamationMark2 == 0) exclamationMark2 = 1.0;
-			if(exclamationMark1 <= 0.95 && exclamationMark2 > 0) exclamationMark2 -= 0.015 * tpf;
-			
-			if(exclamationMark1 <= 0.95 && exclamationMark2 <= 0) impressed = false;
-		}
-				
-		walk = left || right || up || down;
-		
-		if(walk) walkTimer.count(tpf);
-		if(interact) interactTimer.count(tpf);
-		if(eat) eatTimer.count(tpf);
-				
 //		level.cam.lookAt(center().x, center().y);
 		
 		resetImage();

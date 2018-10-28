@@ -29,7 +29,7 @@ public class Sound {
 	
 	public void play(float volume, float pan)
 	{		
-		if(volume >= 6.0206) volume = 0;
+		if(volume >= 6.0206) volume = 6.0206f;
 		
 		if(isRunning()) stop();
 		
@@ -72,7 +72,7 @@ public class Sound {
 		double distanceX = centerX > x ? centerX - x : x - centerX;
 		double distance = Math.hypot(centerX - x, centerY - y);
 			
-		float finalVolume = volume + (float) ( - (distance / 20));
+		float finalVolume = volume - (float) distance / 25;
 		
 		float panorama = x > centerX ? (float) (distanceX / 50) : -(float) (distanceX / 50);
 		if(panorama > 1) panorama = 1;
@@ -111,7 +111,7 @@ public class Sound {
 	
 	public void stop()
 	{
-		clip.stop();
+		if(clip != null && clip.isRunning()) clip.stop();
 	}
 	
 	public boolean isRunning()

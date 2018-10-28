@@ -92,7 +92,7 @@ public class TextBox {
 //								  false);
 				
 				screen.renderFont(lines[i], 
-								  Screen.DEFAULT_WIDTH / 2 + 32 - (Font.getTextWidth(lines[i], 32) / 2), 
+								  Screen.DEFAULT_WIDTH / 2 - (Font.getTextWidth(lines[i], 32) / 2), 
 								  Screen.DEFAULT_HEIGHT * 0.9 - 256 + 128 - (lines.length * 20) + (i * 40),
 								  32, 
 								  Font.COLOR_WHITE, 

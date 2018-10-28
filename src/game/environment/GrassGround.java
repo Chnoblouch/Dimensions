@@ -1,5 +1,7 @@
 package game.environment;
 
+import java.util.Random;
+
 import game.gfx.Screen;
 import game.gfx.SpriteSheet;
 import game.obj.GameObject;
@@ -10,6 +12,18 @@ extends GameObject {
 	
 	private int sx;
 	private int data;
+	
+	private boolean farmland = false;
+	
+	public void setFarmland(boolean farmland)
+	{
+		this.farmland = farmland;
+	}
+	
+	public boolean isFarmland()
+	{
+		return farmland;
+	}
 	
 	@Override
 	public int getZIndex()
@@ -40,7 +54,10 @@ extends GameObject {
 	public void render(Screen screen)
 	{
 		if(screen.isInside(getX(), getY(), Block.SIZE, Block.SIZE)) 
+		{
 			screen.render(SpriteSheet.grassBlock.getSprite(sx, 0, 24, 24), getX(), getY(), Block.SIZE, Block.SIZE, 0, 1);
+			if(farmland) screen.render(SpriteSheet.farmland.getSprite(0, 0, 24, 24), getX(), getY(), Block.SIZE, Block.SIZE, 0, 1);
+		}
 	}
 	
 	@Override

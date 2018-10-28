@@ -8,6 +8,7 @@ import game.creature.MonsterGiantSlime;
 import game.gfx.Screen;
 import game.gfx.SpriteSheet;
 import game.utils.Angles;
+import game.utils.TimeCounter;
 
 public class BossParticle 
 extends Particle {
@@ -15,6 +16,13 @@ extends Particle {
 	private double size = 16 + (new Random().nextDouble() * 8);
 	private MonsterGiantSlime target;
 	private double dirX, dirY;
+	
+	private TimeCounter disappearTimer;
+	
+	public BossParticle()
+	{
+		disappearTimer = new TimeCounter(5000, () -> level.removeObject(this));
+	}
 
 	@Override
 	public int getZIndex()
@@ -49,6 +57,8 @@ extends Particle {
 	@Override
 	public void update(double tpf)
 	{
+		disappearTimer.count(tpf);
+		
 		moveAlongAngle(getAngle(target), 20 * tpf);
 		
 		if(getX() > target.getX() - 16 && getX() < target.getX() + 256 + 16 && 

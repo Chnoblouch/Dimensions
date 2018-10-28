@@ -42,6 +42,7 @@ import game.environment.DarkSpike;
 import game.environment.FrostPearl;
 import game.environment.GrassBlock;
 import game.environment.GrassGround;
+import game.environment.IronOreStone;
 import game.environment.Mushroom;
 import game.environment.NightHerb;
 import game.environment.RedStone;
@@ -161,13 +162,15 @@ implements ActionListener, KeyListener, MouseMotionListener, MouseListener {
 		addObjectToMenubar("Tree", Tree.class.getName(), SpriteSheet.overworld, Block.SIZE * 3, Block.SIZE * 3, 72, 72, 
 						   new int[]{0}, new int[]{0}, 1, true);
 		addObjectToMenubar("Stone", Stone.class.getName(), SpriteSheet.overworld, Block.SIZE * 1.5, Block.SIZE, 32, 24, 
-				   		  new int[]{0}, new int[]{72}, 1, true);
+				   		   new int[]{0}, new int[]{72}, 1, true);
+		addObjectToMenubar("Iron Ore Stone", IronOreStone.class.getName(), SpriteSheet.overworld, Block.SIZE * 1.5, Block.SIZE, 32, 24, 
+						   new int[]{32}, new int[]{72}, 1, true);
 		addObjectToMenubar("Red Stone", RedStone.class.getName(), SpriteSheet.darkworld, Block.SIZE * 1.5, Block.SIZE, 32, 24, 
 		   		  		   new int[]{0}, new int[]{64}, 1, true);
 		addObjectToMenubar("Blue Stone", BlueStone.class.getName(), SpriteSheet.iceworld, Block.SIZE * 1.5, Block.SIZE, 32, 24, 
 						   new int[]{0}, new int[]{24}, 1, true);
 		addObjectToMenubar("Mushroom", Mushroom.class.getName(), SpriteSheet.overworld, Block.SIZE, Block.SIZE, 24, 24, 
-		   		  new int[]{32}, new int[]{72}, 1, true);
+		   		  new int[]{64}, new int[]{72}, 1, true);
 		
 		
 		addObject.addSeparator();
@@ -599,6 +602,8 @@ implements ActionListener, KeyListener, MouseMotionListener, MouseListener {
 				selectedObjects.add(obj);
 			}
 			
+			ArrayList<EditorObject> possibleSelections = new ArrayList<>();
+			
 			for(int i = 0; i < objs.size(); i++)
 			{
 				EditorObject t = objs.get(i);
@@ -609,15 +614,32 @@ implements ActionListener, KeyListener, MouseMotionListener, MouseListener {
 					{
 						if(mode == MODE_SELECT)
 						{
-							if(!selectedObjects.contains(t)) 
-							{
-								selectedObjects.add(t);
-								break;
-							}
+							possibleSelections.add(t);
 //							else selectedObjects.remove(t);
 						}
 					} else {
 						if(mode == MODE_PAINT) objToPaint = t.clone();
+					}
+				}
+			}
+			
+			if(mode == MODE_SELECT && !possibleSelections.isEmpty())
+			{
+				possibleSelections.sort(new Comparator<EditorObject>() 
+				{
+					@Override
+					public int compare(EditorObject o1, EditorObject o2)
+					{
+						return o2.zIndex - o1.zIndex;
+					}
+				});
+								
+				for(int i = 0; i < possibleSelections.size(); i++)
+				{
+					if(!selectedObjects.contains(possibleSelections.get(i))) 
+					{
+						selectedObjects.add(possibleSelections.get(i));
+						break;
 					}
 				}
 			}

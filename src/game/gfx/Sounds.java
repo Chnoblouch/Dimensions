@@ -18,6 +18,7 @@ public class Sounds {
 	public static Sound hurt0 = new Sound("/snd/sfx/creatures/player/hurt0.wav");
 	public static Sound hurt1 = new Sound("/snd/sfx/creatures/player/hurt1.wav");
 	public static Sound hurt2 = new Sound("/snd/sfx/creatures/player/hurt2.wav");
+	public static Sound shoot = new Sound("/snd/sfx/creatures/player/shoot.wav");
 	
 	public static Sound lobireHurt = new Sound("/snd/sfx/creatures/lobire/hurt.wav");
 	public static Sound lobireDie = new Sound("/snd/sfx/creatures/lobire/die.wav");
@@ -26,6 +27,11 @@ public class Sounds {
 	public static Sound rogoHurt = new Sound("/snd/sfx/creatures/rogo/hurt.wav");
 	public static Sound rogoDie = new Sound("/snd/sfx/creatures/rogo/die.wav");
 	
-	public static Sound taykolos = new Sound("/snd/sfx/taykolos.wav");
+	public static Sound taykolos = new Sound("/snd/sfx/items/taykolos.wav");
+	public static Sound crystal = new Sound("/snd/sfx/items/crystal.wav");
+	public static Sound crystalHit = new Sound("/snd/sfx/items/crystal_hit.wav");
 	
+	public static Sound wind = new Sound("/snd/sfx/wind.wav");
+	
+	public static Sound youDied = new Sound("/snd/music/youdied.wav");	
 }

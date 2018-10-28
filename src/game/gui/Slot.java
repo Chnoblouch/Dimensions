@@ -1,5 +1,6 @@
 package game.gui;
 
+import java.awt.event.KeyEvent;
 import java.util.Random;
 
 import game.gfx.Screen;
@@ -48,45 +49,69 @@ public class Slot {
 			
 		mousePressed();
 		
-		if(!inventory.isItemOnMouse())
+		if(!(inventory.game.input.isPressed(KeyEvent.VK_SHIFT) && this instanceof SlotDefault))
 		{
-			inventory.itemOnMouse = item;
-			inventory.itemOnMouseCount = count;
-			clear();
-							
-			return;
-		} else 
-		{
-			if(!canHold(inventory.itemOnMouse, inventory.itemOnMouseCount)) return;
-			
-			if(isEmpty())
+			if(!inventory.isItemOnMouse())
 			{
-				setItem(inventory.itemOnMouse, inventory.itemOnMouseCount);
-				
-				inventory.itemOnMouse = null;
-				inventory.itemOnMouseCount = 0;
+				inventory.itemOnMouse = item;
+				inventory.itemOnMouseCount = count;
+				clear();
+								
+				return;
 			} else 
 			{
-				if(item.getItemID() == inventory.itemOnMouse.getItemID())
+				if(!canHold(inventory.itemOnMouse, inventory.itemOnMouseCount)) return;
+				
+				if(isEmpty())
 				{
-					count += inventory.itemOnMouseCount;
+					setItem(inventory.itemOnMouse, inventory.itemOnMouseCount);
 					
 					inventory.itemOnMouse = null;
 					inventory.itemOnMouseCount = 0;
 				} else 
 				{
+					if(item.getItemID() == inventory.itemOnMouse.getItemID())
+					{
+						count += inventory.itemOnMouseCount;
+						
+						inventory.itemOnMouse = null;
+						inventory.itemOnMouseCount = 0;
+					} else 
+					{
+						Item oldItem = getItem();
+						int oldCount = getItemCount();
+						
+						setItem(inventory.itemOnMouse, inventory.itemOnMouseCount);
+						
+						inventory.itemOnMouse = oldItem;
+						inventory.itemOnMouseCount = oldCount;
+					}
+				}
+				
+				return;
+			}	
+		} else 
+		{
+			Slot target = null;
+			if(button == 1) target = inventory.getMainHandSlot();
+			else if(button == 3) target = inventory.getOffHandSlot();
+			
+			if(target.isEmpty())
+			{
+				if(target.canHold(getItem(), getItemCount())) target.setItem(getItem(), getItemCount());
+				clear();
+			} else
+			{
+				if(target.canHold(getItem(), getItemCount()) && canHold(target.getItem(), target.getItemCount()))
+				{
 					Item oldItem = getItem();
 					int oldCount = getItemCount();
 					
-					setItem(inventory.itemOnMouse, inventory.itemOnMouseCount);
-					
-					inventory.itemOnMouse = oldItem;
-					inventory.itemOnMouseCount = oldCount;
+					setItem(target.getItem(), target.getItemCount());
+					target.setItem(oldItem, oldCount);
 				}
 			}
-			
-			return;
-		}	
+		}
 	}
 
 	public void mouseReleased(DoublePoint pos, int button)

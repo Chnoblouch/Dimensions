@@ -21,7 +21,7 @@ public class TextLoader {
 	
 	static
 	{		
-		loadText("texts", texts);
+		loadText("english", texts);
 //		loadText("speech", speech);
 //		loadText("items", items);
 //		loadText("creatures", creatures);

@@ -6,9 +6,12 @@ import java.awt.Graphics;
 import java.awt.Rectangle;
 import java.awt.image.BufferedImage;
 import java.io.IOException;
+import java.io.InputStream;
+import java.net.URL;
 import java.util.HashMap;
 
 import javax.imageio.ImageIO;
+import javax.imageio.stream.ImageInputStream;
 
 public class SpriteLoader 
 {
@@ -20,7 +23,10 @@ public class SpriteLoader
 		if (img != null) return img; //if img loaded
 		
 		try {
-			img = ImageIO.read(SpriteLoader.class.getResource(name));
+			InputStream in = SpriteLoader.class.getResourceAsStream(name);
+			if(in == null) System.out.println("Couldn't load image file: " + name);
+			
+			img = ImageIO.read(in);
 //			img = new BufferedImage(readImg.getWidth(), readImg.getHeight(), BufferedImage.TYPE_INT_ARGB);
 //			Graphics2D g2d = img.createGraphics();
 //			g2d.drawImage(readImg, 0, 0, readImg.getWidth(), readImg.getHeight(), null);

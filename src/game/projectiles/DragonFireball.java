@@ -78,7 +78,7 @@ extends GameObject {
 			
 			if(o.isInRange(this) && o instanceof Creature && collides(o) && o != dragon) 
 			{
-				((Creature) o).damage(5, this);
+				((Creature) o).damage(20, this);
 				level.removeObject(this);
 				
 				for(int j = 0; j < 16; j++)

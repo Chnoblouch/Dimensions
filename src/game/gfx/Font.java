@@ -3,8 +3,7 @@ package game.gfx;
 public class Font {
 	
 	public static final String COLOR_WHITE = "white";
-	public static final String COLOR_YELLOW = "yellow";
-	public static final String COLOR_BLACK = "black";
+	public static final String COLOR_RED = "red";
 	
 	public static String chars = "ABCDEFGHIJKLMNOPQRSTUVWXYZÄÖÜ"+
 								  "abcdefghijklmnopqrstuvwxyzäöü"+
@@ -33,7 +32,10 @@ public class Font {
 			int cx = Font.x[c] * 6;
 			int cy = Font.y[c] * 10;
 			
-			screen.renderGUI(SpriteSheet.font.getSprite(cx, cy, 5, 10), x + (i * (size / 1.5)), y, size / 2, size, 0, 1);
+			if(col.equals(COLOR_WHITE))
+				screen.renderGUI(SpriteSheet.fontWhite.getSprite(cx, cy, 5, 10), x + (i * (size / 1.5)), y, size / 2, size, 0, 1);
+			else if(col.equals(COLOR_RED))
+				screen.renderGUI(SpriteSheet.fontRed.getSprite(cx, cy, 5, 10), x + (i * (size / 1.5)), y, size / 2, size, 0, 1);
 		}
 	}
 	

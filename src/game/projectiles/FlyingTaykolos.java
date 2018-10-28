@@ -5,7 +5,10 @@ import java.util.Random;
 
 import game.creature.Dragon;
 import game.creature.Monster;
+import game.environment.BlueStone;
 import game.environment.GrassBlock;
+import game.environment.IronOreStone;
+import game.environment.RedStone;
 import game.environment.Stone;
 import game.environment.Tree;
 import game.gfx.Screen;
@@ -90,7 +93,7 @@ extends GameObject {
 				if(o instanceof Monster)
 				{		
 //					returnToPlayer = true;
-					((Monster) o).damage(4, level.player);
+					((Monster) o).damage(15, level.player);
 					((Monster) o).knockback(angle, 16);
 					
 					break;
@@ -98,9 +101,10 @@ extends GameObject {
 				else if(o instanceof Dragon)
 				{
 //					returnToPlayer = true;
-					((Dragon) o).damage(4, level.player);
+					((Dragon) o).damage(15, level.player);
 				}
-				else if((o instanceof GrassBlock && level.getID() != 2) || o instanceof Tree || o instanceof Stone)
+				else if((o instanceof GrassBlock && level.getID() != 2) || o instanceof Tree || o instanceof Stone ||
+						o instanceof IronOreStone || o instanceof RedStone || o instanceof BlueStone)
 				{
 					returnToPlayer = true;
 					break;

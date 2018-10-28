@@ -1,6 +1,7 @@
 package game.gfx;
 
 import java.awt.image.BufferedImage;
+import java.util.HashMap;
 
 public class SpriteSheet {
 		
@@ -31,6 +32,8 @@ public class SpriteSheet {
 	public static SpriteSheet darkworld = new SpriteSheet(SpriteLoader.loadSprite("/img/environment/darkworld.png"));
 	public static SpriteSheet iceworld = new SpriteSheet(SpriteLoader.loadSprite("/img/environment/iceworld.png"));
 	
+	public static SpriteSheet farmland = new SpriteSheet(SpriteLoader.loadSprite("/img/environment/farmland.png"));
+	
 	public static SpriteSheet portals = new SpriteSheet(SpriteLoader.loadSprite("/img/environment/portals.png"));
 	
 	// Objects
@@ -48,32 +51,55 @@ public class SpriteSheet {
 	public static SpriteSheet itemInfo = new SpriteSheet(SpriteLoader.loadSprite("/img/gui/iteminfo.png"));
 	public static SpriteSheet shimmer = new SpriteSheet(SpriteLoader.loadSprite("/img/shimmer.png"));
 	public static SpriteSheet cursor = new SpriteSheet(SpriteLoader.loadSprite("/img/cursor.png"));
+	public static SpriteSheet deathScreen = new SpriteSheet(SpriteLoader.loadSprite("/img/gui/deathScreen.png"));
 	
 	public static SpriteSheet skyworldbg = new SpriteSheet(SpriteLoader.loadSprite("/img/skyworld.png"));
 	
 	public static SpriteSheet items = new SpriteSheet(SpriteLoader.loadSprite("/img/items.png"));
 	
-	public static SpriteSheet font = new SpriteSheet(SpriteLoader.loadSprite("/img/font/white.png"));
+	// Font
+	public static SpriteSheet fontWhite = new SpriteSheet(SpriteLoader.loadSprite("/img/font/white.png"));
+	public static SpriteSheet fontRed = new SpriteSheet(SpriteLoader.loadSprite("/img/font/red.png"));
 	
 	// In Hand
-	public static SpriteSheet appleInHand = new SpriteSheet(SpriteLoader.loadSprite("/img/overlays/items/apple.png"));
-	public static SpriteSheet meatInHand = new SpriteSheet(SpriteLoader.loadSprite("/img/overlays/items/meat.png"));
-	public static SpriteSheet woodSwordInHand = new SpriteSheet(SpriteLoader.loadSprite("/img/overlays/items/wood_sword.png"));
-	public static SpriteSheet stoneSwordInHand = new SpriteSheet(SpriteLoader.loadSprite("/img/overlays/items/stone_sword.png"));
-	public static SpriteSheet ironSwordInHand = new SpriteSheet(SpriteLoader.loadSprite("/img/overlays/items/iron_sword.png"));
-	public static SpriteSheet taykolosInHand = new SpriteSheet(SpriteLoader.loadSprite("/img/overlays/items/taykolos.png"));
-	public static SpriteSheet ironShieldInHand = new SpriteSheet(SpriteLoader.loadSprite("/img/overlays/items/iron_shield.png"));
+	public static SpriteSheet ironAxeInHand = new SpriteSheet(SpriteLoader.loadSprite("/img/overlays/items/axe/iron.png"));
+	
+	public static SpriteSheet woodSwordInHand = new SpriteSheet(SpriteLoader.loadSprite("/img/overlays/items/sword/wood.png"));
+	public static SpriteSheet stoneSwordInHand = new SpriteSheet(SpriteLoader.loadSprite("/img/overlays/items/sword/stone.png"));
+	public static SpriteSheet ironSwordInHand = new SpriteSheet(SpriteLoader.loadSprite("/img/overlays/items/sword/iron.png"));
+	public static SpriteSheet goldSwordInHand = new SpriteSheet(SpriteLoader.loadSprite("/img/overlays/items/sword/gold.png"));
+	
+	public static SpriteSheet appleInHand = new SpriteSheet(SpriteLoader.loadSprite("/img/overlays/items/food/apple.png"));
+	public static SpriteSheet meatInHand = new SpriteSheet(SpriteLoader.loadSprite("/img/overlays/items/food/meat.png"));
+	public static SpriteSheet meatCookedInHand = new SpriteSheet(SpriteLoader.loadSprite("/img/overlays/items/food/meat_cooked.png"));
+	
+	public static SpriteSheet ironShieldInHand = new SpriteSheet(SpriteLoader.loadSprite("/img/overlays/items/shield/iron.png"));
+	
+	public static SpriteSheet bowInHand = new SpriteSheet(SpriteLoader.loadSprite("/img/overlays/items/bow/bow.png"));
+	
+	public static SpriteSheet taykolosInHand = new SpriteSheet(SpriteLoader.loadSprite("/img/overlays/items/magic/taykolos.png"));
+	public static SpriteSheet crystalStaffInHand = new SpriteSheet(SpriteLoader.loadSprite("/img/overlays/items/magic/crystal_staff.png"));
 	
 	// Armor
-	public static SpriteSheet armorIronHelmet = new SpriteSheet(SpriteLoader.loadSprite("/img/overlays/armor/iron_helmet.png"));
-	public static SpriteSheet armorIronChestplate = new SpriteSheet(SpriteLoader.loadSprite("/img/overlays/armor/iron_chestplate.png"));
-	public static SpriteSheet armorIronLeggings = new SpriteSheet(SpriteLoader.loadSprite("/img/overlays/armor/iron_leggings.png"));
-	public static SpriteSheet armorIronBoots = new SpriteSheet(SpriteLoader.loadSprite("/img/overlays/armor/iron_boots.png"));
+	public static SpriteSheet ironHelmetOnBody = new SpriteSheet(SpriteLoader.loadSprite("/img/overlays/armor/helmet/iron.png"));
+	public static SpriteSheet ironChestplateOnBody = new SpriteSheet(SpriteLoader.loadSprite("/img/overlays/armor/chestplate/iron.png"));
+	public static SpriteSheet ironLeggingsOnBody = new SpriteSheet(SpriteLoader.loadSprite("/img/overlays/armor/leggings/iron.png"));
+	public static SpriteSheet ironBootsOnBody = new SpriteSheet(SpriteLoader.loadSprite("/img/overlays/armor/boots/iron.png"));
+	
+	public static SpriteSheet goldHelmetOnBody = new SpriteSheet(SpriteLoader.loadSprite("/img/overlays/armor/helmet/gold.png"));
+	public static SpriteSheet goldChestplateOnBody = new SpriteSheet(SpriteLoader.loadSprite("/img/overlays/armor/chestplate/gold.png"));
+	public static SpriteSheet goldLeggingsOnBody = new SpriteSheet(SpriteLoader.loadSprite("/img/overlays/armor/leggings/gold.png"));
+	public static SpriteSheet goldBootsOnBody = new SpriteSheet(SpriteLoader.loadSprite("/img/overlays/armor/boots/gold.png"));
+	
+	public static SpriteSheet wizardHatOnBody = new SpriteSheet(SpriteLoader.loadSprite("/img/overlays/armor/helmet/wizard.png"));
+	public static SpriteSheet wizardRobeOnBody = new SpriteSheet(SpriteLoader.loadSprite("/img/overlays/armor/chestplate/wizard.png"));
 	
 	// Random
 	public static SpriteSheet exclamationmarks = new SpriteSheet(SpriteLoader.loadSprite("/img/exclamationmarks.png"));
 	
 	private BufferedImage img;
+	
+	private HashMap<String, BufferedImage> cache = new HashMap<>();
 	
 	public SpriteSheet(BufferedImage img)
 	{
@@ -87,7 +113,7 @@ public class SpriteSheet {
 	
 	public BufferedImage getSprite(int x, int y, int width, int height)
 	{
-		return img.getSubimage(x, y, width, height);
+		return cache.computeIfAbsent(x + "," + y + "," + width + "," + height, key -> img.getSubimage(x, y, width, height));
 	}
 
 }

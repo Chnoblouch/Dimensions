@@ -16,6 +16,7 @@ extends GameObject {
 	
 	private double health = 0;
 	private double maxHealth = 0;
+	private boolean death = false;
 	private int invulnerableTime;
 	private boolean invulnerable = false;
 	private TimeCounter invulnerableTimer;
@@ -31,7 +32,7 @@ extends GameObject {
 	
 	public Creature()
 	{
-		setHealth(20);
+		setHealth(50);
 		
 		invulnerableTimer = new TimeCounter(1000, () -> {
 			invulnerable = false;
@@ -76,13 +77,28 @@ extends GameObject {
 		health -= finalDamage;
 		invulnerable = true;
 		
-		if(health <= 0) die();
+		if(health <= 0) 
+		{
+			die();
+			death = true;
+		}
 		else getDamage(attacker);
 	}
 	
 	public double getHealth()
 	{
 		return health;
+	}
+	
+	public void respawn()
+	{
+		death = false;
+		setHealth(maxHealth);
+	}
+	
+	public boolean isDeath()
+	{
+		return death;
 	}
 	
 	public void setInvulnerableTime(int time)

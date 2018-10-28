@@ -54,29 +54,44 @@ extends Slot {
 		int dmy = -48; // y distance to mouse
 		int fontSize = 32;
 				
-		boolean nameLonger = false;
-		if(getItem().getDescription() == null) nameLonger = true;
-		else nameLonger = getItem().getName().length() > getItem().getDescription().length();
+		String longestPart = getItem().getName();
+
+		if(getItem().getDescription() != null) 
+		{
+			int longestPartLength = longestPart.length();
+			for(int i = 0; i < getItem().getDescription().length; i++) 
+			{
+				String text = getItem().getDescription()[i];
+				if(text.length() > longestPartLength)
+				{
+					longestPartLength = text.length();
+					longestPart = text;
+				}
+			}
+		}
 		
 		int bx = mx + dmx; // border x;
 		int by = my + dmy; // border y;
-		int bw = (int) ((Font.getTextWidth(nameLonger ? getItem().getName() : getItem().getDescription(), fontSize) / 32) * 32) + 32; // border with
-		int bh = getItem().getDescription() == null ? 32 : 64; // border height
+		int bw = (int) Math.ceil(Font.getTextWidth(longestPart, fontSize)); // border with
+		int bh = getItem().getDescription() == null ? 32 : 32 + getItem().getDescription().length * 32; // border height
 		
 		screen.renderGUI(SpriteSheet.itemInfo.getSprite(0, 0, 8, 8), bx, by, 32, 32, 0, 1);		
 		screen.renderGUI(SpriteSheet.itemInfo.getSprite(16, 0, 8, 8), bx + bw, by, 32, 32, 0, 1);
 		screen.renderGUI(SpriteSheet.itemInfo.getSprite(0, 16, 8, 8), bx, by + bh, 32, 32, 0, 1);		
 		screen.renderGUI(SpriteSheet.itemInfo.getSprite(16, 16, 8, 8), bx + bw, by + bh, 32, 32, 0, 1);
+		
 		for(int i = 0; i < bw - 32; i+= 32) 
 		{ 
 			screen.renderGUI(SpriteSheet.itemInfo.getSprite(8, 0, 8, 8), bx + 32 + i, by, 32, 32, 0, 1); 
 			screen.renderGUI(SpriteSheet.itemInfo.getSprite(8, 16, 8, 8), bx + 32 + i, by + bh, 32, 32, 0, 1); 
 		}
+		
 		for(int i = 0; i < bh - 32; i+= 32) 
 		{ 
 			screen.renderGUI(SpriteSheet.itemInfo.getSprite(0, 8, 8, 8), bx, by + i + 32, 32, 32, 0, 1); 
 			screen.renderGUI(SpriteSheet.itemInfo.getSprite(16, 8, 8, 8), bx + bw, by + 32 + i, 32, 32, 0, 1); 
 		}
+		
 		for(int fy = by + 32; fy < by + bh; fy+= 32)
 		{
 			for(int fx = bx + 32; fx < bx + bw; fx+= 32)
@@ -89,7 +104,10 @@ extends Slot {
 		
 		if(getItem().getDescription() != null)
 		{
-			screen.renderFont(getItem().getDescription(), bx + 16, by + 48, fontSize, Font.COLOR_WHITE, false);
+			for(int i = 0; i < getItem().getDescription().length; i++)
+			{
+				screen.renderFont(getItem().getDescription()[i], bx + 16, by + 48 + i * 32, fontSize, Font.COLOR_WHITE, false);
+			}
 		}
 	}
 

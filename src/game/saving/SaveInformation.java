@@ -49,10 +49,4 @@ public class SaveInformation {
 		
 		return information;
 	}
-	
-	public static void buildGame(SaveInformation information)
-	{
-		
-	}
-
 }

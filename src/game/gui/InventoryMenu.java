@@ -39,4 +39,5 @@ public class InventoryMenu {
 	public void mousePressed(DoublePoint pos, int button) {}
 	public void mouseReleased(DoublePoint pos, int button) {}
 	public void render(Screen screen) {}
+	public void renderInfo(Screen screen) {}
 }
